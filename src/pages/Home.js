@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Footer from "../components/Footer";
 
 function Home() {
   return (
@@ -8,7 +9,7 @@ function Home() {
       <div className="container-fluid">
         <div className="row home-image ">
           <div className="col-8 vh-100 m-auto mt-5">
-            <div className="main-arasi vh-100"></div>
+            <div className="main-arasi"></div>
             <h1 className="home-title mt-5">
               Ristorante Pizzeria Pinocchio Kulinarische Spezialitäten
             </h1>
@@ -67,7 +68,7 @@ function Home() {
             </div>
             <div className="col-4  m-5">
               <img
-                src="https://pinocchio-oberuzwil.ch/wp-content/uploads/2021/08/ristorante-pizzeria-pinocchio-drinks-480.jpg"
+                src="images/row-2-getranke.jpg"
                 alt="getränke"
               />
             </div>
@@ -107,7 +108,7 @@ function Home() {
               <div className="col-4 p-0">
               <img
                 className="row4-picture"
-                src="https://pinocchio-oberuzwil.ch/wp-content/uploads/2021/05/0M6A8371-scaled.jpg"
+                src="images/row4-1.jpg"
                 alt="getränke"
               />
               </div>
@@ -121,7 +122,7 @@ function Home() {
             <div className="col-4 p-0">
               <img
                 className="row4-picture"
-                src="https://pinocchio-oberuzwil.ch/wp-content/uploads/2021/05/0M6A8344-scaled.jpg"
+                src="images/row4-2.jpg"
                 alt="getränke"
               />
               </div>
@@ -133,7 +134,7 @@ function Home() {
               <div className="col-4 p-0">
               <img
                 className="row4-picture"
-                src="https://pinocchio-oberuzwil.ch/wp-content/uploads/2021/05/0M6A8344-scaled.jpg"
+                src="images/row4-2.jpg"
                 alt="getränke"
               />
               </div>
@@ -148,7 +149,7 @@ function Home() {
               <div className="col-4 p-0">
               <img
                 className="row4-picture"
-                src="https://pinocchio-oberuzwil.ch/wp-content/uploads/2021/05/0M6A8353-scaled.jpg"
+                src="images/row4-3.jpg"
                 alt="getränke"
               />
               </div>
@@ -162,7 +163,7 @@ function Home() {
             <div className="col-4 p-0">
               <img
                 className="row4-picture"
-                src="https://pinocchio-oberuzwil.ch/wp-content/uploads/2021/05/0M6A8327-scaled.jpg"
+                src="images/row4-4.jpg"
                 alt="getränke"
               />
               </div>
@@ -174,7 +175,7 @@ function Home() {
               <div className="col-4 p-0">
               <img
                 className="row4-picture"
-                src="https://pinocchio-oberuzwil.ch/wp-content/uploads/2021/05/0M6A8374-scaled.jpg"
+                src="images/row4-5.jpg"
                 alt="getränke"
               />
               </div>
@@ -184,6 +185,7 @@ function Home() {
           <div className="col-1 row4-yan"></div>
         </div>
       </div>
+      <Footer/>
     </>
   );
 }

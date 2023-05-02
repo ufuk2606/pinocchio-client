@@ -3,12 +3,12 @@ import { NavLink } from 'react-router-dom';
 
 function NavigationBar() {
   return (
-    <Navbar sticky="top" bg="dark" variant="dark" expand="lg">
+    <Navbar className='p-0' sticky="top" bg="dark" variant="dark" expand="lg">
       <Container>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Brand href="/">
             <img
-              src="https://neu.pinocchio-oberuzwil.ch/wp-content/uploads/2021/05/neues-logo-pinocchio-farbe-Klein.png"
+              src="images/logo.png"
               width="200"
               className="d-inline-block align-top"
               alt="logo"

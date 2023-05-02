@@ -2,7 +2,8 @@ body {
   background-attachment: fixed;
   background-size: cover;
 }
-header.masthead {
+
+/* header.masthead {
   position: relative;
   margin-bottom: 3rem;
   padding-top: calc(8rem + 57px);
@@ -94,7 +95,7 @@ header.masthead .post-heading .meta a {
   header.masthead .post-heading .subheading {
     font-size: 1.875rem;
   }
-}
+} */
 
 .home-image {
   background-image: url("https://pinocchio-oberuzwil.ch/wp-content/uploads/2023/03/Hausgemachtes-1.jpg");
@@ -103,7 +104,8 @@ header.masthead .post-heading .meta a {
 }
 
 .main-arasi {
-  background-color: #4d4d4d;
+  background-color: #3a3838;
+  height: 98%;
   width: 100%;
   opacity: 0.6;
   position: absolute;
@@ -129,6 +131,20 @@ header.masthead .post-heading .meta a {
   line-height: 1.5em;
   font-weight: 600;
   position: relative;
+}
+.page-top{
+  color: #e7e7e7;
+  margin-top: 30px;
+  text-align: center;
+  font-size: 23px;
+  font-family: Montserrat, Helvetica, Arial, Lucida, sans-serif;
+  line-height: 34px;
+  font-weight: 500;
+  position: relative;
+}
+.page-top-image {
+  background-size: cover;
+  height: 91vh;
 }
 .home-btn-speisekarten {
   background-color: transparent;
@@ -234,4 +250,15 @@ header.masthead .post-heading .meta a {
   width: 100%;
   height: 280px;
   padding: 0px 0px;
+}
+.footer{
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+  background-color: #1f1f1f;
+  color: #939393;
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  line-height: 31px;
+  font-weight: 500;
 }
