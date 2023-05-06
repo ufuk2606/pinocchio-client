@@ -19,16 +19,50 @@ function Speisekarten() {
             </h1>
             <div className="row my-5">
               <div className="col-3 speisenkarte-menüs">
-                <a href="speisenkartenMenüs/Speisekarte_2022.pdf" target="_blank"> <img width='230' src="images/Speisekarte.png" alt="Speisekarte-menü" /></a>
+                <a
+                  href="speisenkartenMenüs/Speisekarte_2022.pdf"
+                  target="_blank"
+                >
+                  {" "}
+                  <img
+                    width="210"
+                    src="images/Speisekarte.png"
+                    alt="Speisekarte-menü"
+                  />
+                </a>
               </div>
               <div className="col-3 speisenkarte-menüs">
-              <a href="speisenkartenMenüs/Mittagsmenus.pdf" target="_blank"> <img width='230'  src="images/Mittagsmenüs.png" alt="Mittagsmenüs" /></a>
+                <a href="speisenkartenMenüs/Mittagsmenus.pdf" target="_blank">
+                  {" "}
+                  <img
+                    width="210"
+                    src="images/Mittagsmenüs.png"
+                    alt="Mittagsmenüs"
+                  />
+                </a>
               </div>
               <div className="col-3 speisenkarte-menüs">
-              <a href="speisenkartenMenüs/Monathits.pdf" target="_blank"> <img width='230'  src="images/Monatshits.png" alt="Monatshits" /></a>
+                <a href="speisenkartenMenüs/Monathits.pdf" target="_blank">
+                  {" "}
+                  <img
+                    width="210"
+                    src="images/Monatshits.png"
+                    alt="Monatshits"
+                  />
+                </a>
               </div>
               <div className="col-3 speisenkarte-menüs">
-              <a href="speisenkartenMenüs/Hausgemachte-Saucen.pdf" target="_blank"> <img width='230'  src="images/Hausgemachtes.png" alt="Hausgemachtes" /></a>
+                <a
+                  href="speisenkartenMenüs/Hausgemachte-Saucen.pdf"
+                  target="_blank"
+                >
+                  {" "}
+                  <img
+                    width="210"
+                    src="images/Hausgemachtes.png"
+                    alt="Hausgemachtes"
+                  />
+                </a>
               </div>
             </div>
           </div>
