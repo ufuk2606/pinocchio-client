@@ -132,7 +132,7 @@ header.masthead .post-heading .meta a {
   font-weight: 600;
   position: relative;
 }
-.page-top{
+.page-top {
   color: #e7e7e7;
   margin-top: 30px;
   text-align: center;
@@ -183,24 +183,24 @@ header.masthead .post-heading .meta a {
   line-height: 62px;
   margin: 30px 0px;
 }
-.home-row2-content{
+.home-row2-content {
   color: #939393;
   font-family: Montserrat, Helvetica, Arial, Lucida, sans-serif;
   font-size: 17px;
   line-height: 31px;
   font-weight: 500;
 }
-.row3{
+.row3 {
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #f7f7f7;
 }
-.row3-content{
+.row3-content {
   margin: 80px 60px;
   text-align: center;
 }
-.row3-title{
+.row3-title {
   color: #939393;
   text-align: center;
   font-family: Montserrat, Helvetica, Arial, Lucida, sans-serif;
@@ -209,7 +209,7 @@ header.masthead .post-heading .meta a {
   font-weight: 700;
   margin-bottom: 40px;
 }
-.row3-title2{
+.row3-title2 {
   color: #4d4d4d;
   font-family: "Playfair Display", Georgia, "Times New Roman", serif;
   font-size: 48px;
@@ -217,7 +217,7 @@ header.masthead .post-heading .meta a {
   font-weight: 500;
   margin-bottom: 40px;
 }
-.row3-content2{
+.row3-content2 {
   color: #939393;
   text-align: center;
   font-family: Montserrat, Helvetica, Arial, Lucida, sans-serif;
@@ -226,32 +226,32 @@ header.masthead .post-heading .meta a {
   font-weight: 500;
   margin: 40px 90px;
 }
-.row4{
+.row4 {
   text-align: center;
 }
-.row4-yan{
+.row4-yan {
   background-color: #1f1f1f;
 }
-.row4-title{
+.row4-title {
   color: #1f1f1f;
   font-family: "Playfair Display", Georgia, "Times New Roman", serif;
   font-size: 24px;
   line-height: 31px;
   font-weight: 500;
 }
-.row4-content{
+.row4-content {
   color: #939393;
-  font-family:  Montserrat, Helvetica, Arial, Lucida, sans-serif;
+  font-family: Montserrat, Helvetica, Arial, Lucida, sans-serif;
   font-size: 15px;
   line-height: 27px;
   font-weight: 500;
 }
-.row4-picture{
+.row4-picture {
   width: 100%;
   height: 280px;
   padding: 0px 0px;
 }
-.footer{
+.footer {
   width: 100%;
   padding: 20px;
   text-align: center;
@@ -262,8 +262,48 @@ header.masthead .post-heading .meta a {
   line-height: 31px;
   font-weight: 500;
 }
-.speisenkarte-menüs:hover{
+.speisenkarte-menüs:hover {
   box-shadow: 0px 5px 10px 0px rgba(119, 119, 119, 0.5);
   -webkit-box-shadow: 0px 5px 10px 0px rgba(119, 119, 119, 0.5);
-  -moz-box-shadow:  0px 5px 10px 0px rgba(119, 119, 119, 0.5);
+  -moz-box-shadow: 0px 5px 10px 0px rgba(119, 119, 119, 0.5);
+}
+.reservation-btn {
+  background-color: #c39d63;
+  border: 1px solid #c39d63;
+  color: white;
+}
+.reservation-btn:hover {
+  background-color: white;
+  border: 1px solid #c39d63;
+  color: #c39d63;
+}
+.form-control {
+  background-color: #f8f6f2;
+  color: #333;
+}
+.reservation-title {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-size: 48px;
+  color: #1f1f1f;
+  line-height: 1.3em;
+}
+.reservation-tabelle{
+  background-color: #1f1f1f;
+}
+.reservation-tabelle-title{
+  font-family: 'Playfair Display',Georgia,"Times New Roman",serif;
+  font-size: 30px;
+  line-height: 1.3em;
+  color:white;
+}
+.reservation-tabelle-title2{
+  font-family: Montserrat, Helvetica, Arial, Lucida, sans-serif;
+  font-size: 15px;
+  color: #fff;
+  line-height: 1.3em;
+  font-weight: 700;
+  margin-top: 20px;
+}
+.reservation-tabelle-parag{
+  font-weight: 500;
 }

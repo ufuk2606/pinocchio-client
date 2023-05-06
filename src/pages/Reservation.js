@@ -1,6 +1,7 @@
 import React from "react";
 import PageTop from "../components/PageTop";
 import Footer from "../components/Footer";
+import ReservationTabelle from "../components/ReservationTabelle";
 
 function Reservation() {
   const image = "images/reservation-top.jpg";
@@ -11,6 +12,76 @@ function Reservation() {
     <>
       <div className="container-fluid">
         <PageTop image={image} title={title} content={content} />
+      </div>
+      <div className="container">
+        <div className="row m-5 ">
+          <div className="col-8 mb-5">
+            <h1 className="reservation-title">Tischreservation</h1>
+            <form className="me-5">
+              <div className="my-3 mt-5 ">
+                <div className="input-group">
+                  <input
+                    type="text"
+                    placeholder="Name*"
+                    className="form-control me-4 p-2"
+                    required
+                  />
+                  <input
+                    type="email"
+                    placeholder="Email*"
+                    className="form-control ms-4 p-2"
+                    required
+                  />
+                </div>
+              </div>
+              <div className="my-3 mt-4">
+                <div className="input-group">
+                  <input
+                    type="tel"
+                    placeholder="Telefon*"
+                    className="form-control me-4 p-2"
+                    required
+                  />
+                  <input
+                    type="number"
+                    placeholder="Anzahl Personen*"
+                    className="form-control ms-4 p-2"
+                    required
+                  />
+                </div>
+              </div>
+              <div className="my-3 mt-4">
+                <div className="input-group">
+                  <input
+                    type="date"
+                    placeholder="Datum*"
+                    className="form-control me-4 p-2"
+                    required
+                  />
+                  <input
+                    type="time"
+                    placeholder="Zeit*"
+                    className="form-control ms-4 p-2"
+                    required
+                  />
+                </div>
+              </div>
+              <div className="mb-3">
+                <textarea
+                  className="form-control"
+                  rows="5"
+                  placeholder="Mitteilung"
+                ></textarea>
+              </div>
+              <button type="submit" className="reservation-btn mt-3 px-5 py-2">
+                SENDEN
+              </button>
+            </form>
+          </div>
+          <div className="col-4 ">
+            <ReservationTabelle/>
+          </div>
+        </div>
       </div>
       <Footer />
     </>
