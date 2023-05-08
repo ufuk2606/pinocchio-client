@@ -324,3 +324,21 @@ header.masthead .post-heading .meta a {
   color: #c39d63;
   font-size: 30px;
 }
+.card-title{
+  color: #4d4d4d
+}
+.card-title-2{
+  color: #aaaaaa
+}
+.card-text{
+  font-family: "Open Sans", Arial, sans-serif;
+  color: #4d4d4d;
+  font-size: 14px;
+}
+.uberUns-title{
+  font-family: 'Playfair Display',Georgia,"Times New Roman",serif;
+  color: #4d4d4d;
+  font-size: 48px;
+  line-height: 62px;
+  font-weight: 500;
+}

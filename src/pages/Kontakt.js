@@ -78,7 +78,7 @@ function Kontakt() {
             </div>
           </div>
         </div>
-        <div className="row mb-5">
+        <div className="row mb-5"> 
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d10796.709888793464!2d9.1277163!3d47.4279827!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x479ae868e8428767%3A0x35ea8a541bb295e!2sRest.%20Pizzeria%20Pinocchio!5e0!3m2!1sen!2sch!4v1683396235925!5m2!1sen!2sch"
             width="600"
