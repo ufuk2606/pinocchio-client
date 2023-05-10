@@ -12,10 +12,10 @@ function UberUns() {
       <div className="container-fluid">
         <PageTop image={image} title={title} content={content} />
       </div>
-      <div className="container">
+      <div className="container ">
         <h1 className="text-center my-5 uberUns-title">Unser Team</h1>
-        <div class="row row-cols-1 row-cols-md-4 g-4 my-5 ">
-          <div class="col-3">
+        <div class="row row-cols-1 row-cols-md-4 g-4 my-5">
+          <div class="col">
             <div class="card h-100 border-0">
               <img
                 src="images/UberUns/EvrenHaciömeroglu.jpg"
@@ -32,7 +32,7 @@ function UberUns() {
               </div>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col">
             <div class="card h-100 border-0">
               <img
                 src="images/UberUns/RaffaeleLannicello.jpg"
@@ -49,7 +49,7 @@ function UberUns() {
               </div>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col">
             <div class="card h-100 border-0">
               <img
                 src="images/UberUns/DenisaSebökova.jpg"
@@ -65,7 +65,7 @@ function UberUns() {
               </div>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col">
             <div class="card h-100 border-0">
               <img
                 src="images/UberUns/AgaHaciömeroglu.jpg"
@@ -82,7 +82,7 @@ function UberUns() {
               </div>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col">
             <div class="card h-100 border-0">
               <img
                 src="images/UberUns/AzizGohari.jpg"
@@ -99,7 +99,7 @@ function UberUns() {
               </div>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col">
             <div class="card h-100 border-0">
               <img
                 src="images/UberUns/ElisabethKouzmina.jpg"
@@ -116,7 +116,7 @@ function UberUns() {
               </div>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col">
             <div class="card h-100 border-0">
               <img
                 src="images/UberUns/TolgaHaciömeroglu.jpg"
@@ -129,6 +129,83 @@ function UberUns() {
                 <p class="card-text">
                   Ich habe mein Hobby zu meinem Beruf gemacht. Liebe geht durch
                   den Magen.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="container ">
+        <h1 className="text-center my-5 uberUns-title">Was wir bieten</h1>
+        <div class="row row-cols-1 row-cols-md-3 g-4 my-5 ">
+          <div class="col">
+            <div class="card h-100 border-0">
+              <i class="bi bi-calendar text-center uberUns-icons"></i>
+              <div class="card-body text-center">
+                <h3 class="card-title mb-3">Täglich frische Menüs</h3>
+                <p class="card-title-2 mb-0">
+                  Täglich werden die Gerichte frisch vorbereitet und erst nach
+                  der Bestellung zubereitet.{" "}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card h-100 border-0">
+              <i class="bi bi-heart text-center uberUns-icons"></i>
+              <div class="card-body text-center">
+                <h3 class="card-title mb-3">Frische Zutaten</h3>
+                <p class="card-title-2 mb-0">
+                  Regionale Produkte von bester Qualität, werden uns durch
+                  unsere Lieferanten zur Verfügung gestellt.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card h-100 border-0">
+              <i class="bi bi-award text-center uberUns-icons"></i>
+              <div class="card-body text-center">
+                <h3 class="card-title mb-3">Köstliche Gerichte</h3>
+                <p class="card-title-2 mb-0">
+                  Dank mediterraner Küche sind bei der Auswahl der
+                  Köstlichkeiten keine Grenzen gesetzt.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card h-100 border-0">
+              <i class="bi bi-lightbulb text-center uberUns-icons"></i>
+              <div class="card-body text-center">
+                <h3 class="card-title mb-3">Kreative Chefs</h3>
+                <p class="card-title-2 mb-0">
+                  Aus den verschiedenen Lebensmitteln zaubern unsere kreativen
+                  Köche exzellente aufeinander abgestimmte Variationen.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card h-100 border-0">
+              <i class="bi bi-bookmark-check text-center uberUns-icons"></i>
+              <div class="card-body text-center">
+                <h3 class="card-title mb-3">Authentische Küche</h3>
+                <p class="card-title-2 mb-0">
+                  Was das Auge wahrnimmt, wird durch den Gaumen geschmacklich
+                  bestätigt.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card h-100 border-0">
+              <i class="bi bi-cup-hot text-center uberUns-icons"></i>
+              <div class="card-body text-center">
+                <h3 class="card-title mb-3">Frischgerösteter Kaffee</h3>
+                <p class="card-title-2 mb-0">
+                  Der Geruch von frisch geröstetem Kaffee lädt zum Verweilen ein
+                  und führt zu einem krönenden Abschluss.
                 </p>
               </div>
             </div>
