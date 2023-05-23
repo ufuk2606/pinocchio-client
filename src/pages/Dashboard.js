@@ -18,9 +18,9 @@ function Dashboard() {
           />
         </Col>
         <Col md>
-          <h1 className='text-light h1'>{user?.name}</h1>
-          <h1 className="lead text-white">{user?.email}</h1>
-          <h1 className='text-light h1'>{user?.role}</h1>
+          <h1 className='text-dark h1'>{user?.name}</h1>
+          <h1 className="text-dark">{user?.email}</h1>
+          <h1 className='text-dark h1'>{user?.role}</h1>
         </Col>
       </Row>
       <Row>

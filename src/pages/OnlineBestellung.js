@@ -9,37 +9,63 @@ function OnlineBestellung() {
   const title = "Online Bestellung";
   const content =
     "Hier können Sie bequem online bestellen. Lassen Sie sich Zeit, klicken Sie sich durch alle Menüs und wählen Sie Ihre gewünschten Speisen und Zutaten aus. Für jeden Geschmack sollte etwas dabei sein. Nach erfolgter Bestellung wird Ihr Gericht frisch zubereitet und so schnell wie möglich geliefert. Wir wünschen Ihnen „Guten Appetit“.";
-    
-    
-    const [ currentUser, setCurrentUser] = useState();
-    const getUsers = async () => {
-      try {
-        const response = await api.get(`/onlineBestellung`);
-        setCurrentUser(response.data) 
-      } catch (error) {
-        console.error(error.message);
-        throw error;
-      }
-    };
 
-    useEffect (() => {
-      getUsers();
+  const [currentUser, setCurrentUser] = useState();
+  const [meineBestellung, setMeineBestellung] = useState([]);
+
+  const getMenü = async () => {
+    try {
+      const response = await api.get(`/onlineBestellung`);
+      setCurrentUser(response.data);
+    } catch (error) {
+      console.error(error.message);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    getMenü();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+  }, []);
 
-     const adi = currentUser?.map(item=><li>{item.Name}</li>)
+  const handleClickProduct = (pProduct) => {
+    const newArray = [...meineBestellung];
+    newArray.push(pProduct);
+    setMeineBestellung(newArray);
+  };
 
-
+  const templateMenü = currentUser?.map((item) => (
+    <li className="menü-list" key={item.id}>
+      <button
+        type="button"
+        class="btn btn-menü-list d-flex justify-content-between"
+        onClick={() => handleClickProduct(item)}
+      >
+        <span> {item.name}</span>
+        <span>{item.price} CHF</span>
+      </button>
+    </li>
+  ));
+  const templateBestellung = meineBestellung?.map((item) => (
+    <li className="row bestellungen-product" key={item.id}>
+      <div className="col-4 bestellungen-product">
+        <button type="button" class="btn btn-bestellungen">
+          -
+        </button>
+        <span>1</span>
+        <button type="button" class="btn btn-bestellungen">
+          +
+        </button>
+      </div>
+      <div className="col-4 bestellungen-product">{item.name}</div>
+      <div className="col-4 bestellungen-product">{item.price}</div>
+    </li>
+  ));
 
   return (
     <>
       <div className="container-fluid">
         <PageTop image={image} title={title} content={content} />
-      </div>
-      <div>
-        <ul>
-        {adi}
-        </ul>
       </div>
       <div className="container">
         <ul className="row d-flex justify-content-center my-4 list-unstyled ">
@@ -82,134 +108,7 @@ function OnlineBestellung() {
         </div>
         <div className="row mb-5">
           <div className="col-5 mb-3 scrollspy">
-            <ul className="list-unstyled">
-              <li className="menü-list">
-                <button
-                  type="button"
-                  class="btn btn-menü-list d-flex justify-content-between"
-                >
-                  <span> Gemischter Salat</span>
-                  <span>8,00 CHF</span>
-                </button>
-              </li>
-              <li className="menü-list">
-                <button
-                  type="button"
-                  class="btn btn-menü-list d-flex justify-content-between"
-                >
-                  <span>Gemischter Salat </span>
-                  <span>8,00 CHF</span>
-                </button>
-              </li>
-              <li className="menü-list">
-                <button
-                  type="button"
-                  class="btn btn-menü-list d-flex justify-content-between"
-                >
-                  <span> Nüsslisalat mit Ei </span>
-                  <span>8,00 CHF</span>
-                </button>
-              </li>
-              <li className="menü-list">
-                <button
-                  type="button"
-                  class="btn btn-menü-list d-flex justify-content-between"
-                >
-                  <span>Insalata Pinocchio </span>
-                  <span>8,00 CHF</span>
-                </button>
-              </li>
-              <li className="menü-list">
-                <button
-                  type="button"
-                  class="btn btn-menü-list d-flex justify-content-between"
-                >
-                  <span>Insalata Pinocchio </span>
-                  <span>8,00 CHF</span>
-                </button>
-              </li>
-              <li className="menü-list">
-                <button
-                  type="button"
-                  class="btn btn-menü-list d-flex justify-content-between"
-                >
-                  <span>Insalata Pinocchio </span>
-                  <span>8,00 CHF</span>
-                </button>
-              </li>
-              <li className="menü-list">
-                <button
-                  type="button"
-                  class="btn btn-menü-list d-flex justify-content-between"
-                >
-                  <span>Insalata Pinocchio </span>
-                  <span>8,00 CHF</span>
-                </button>
-              </li>
-              <li className="menü-list">
-                <button
-                  type="button"
-                  class="btn btn-menü-list d-flex justify-content-between"
-                >
-                  <span>Insalata Pinocchio </span>
-                  <span>8,00 CHF</span>
-                </button>
-              </li>
-              <li className="menü-list">
-                <button
-                  type="button"
-                  class="btn btn-menü-list d-flex justify-content-between"
-                >
-                  <span>Insalata Pinocchio </span>
-                  <span>8,00 CHF</span>
-                </button>
-              </li>
-              <li className="menü-list">
-                <button
-                  type="button"
-                  class="btn btn-menü-list d-flex justify-content-between"
-                >
-                  <span>Insalata Pinocchio </span>
-                  <span>8,00 CHF</span>
-                </button>
-              </li>
-              <li className="menü-list">
-                <button
-                  type="button"
-                  class="btn btn-menü-list d-flex justify-content-between"
-                >
-                  <span>Insalata Pinocchio </span>
-                  <span>8,00 CHF</span>
-                </button>
-              </li>
-              <li className="menü-list">
-                <button
-                  type="button"
-                  class="btn btn-menü-list d-flex justify-content-between"
-                >
-                  <span>Insalata Pinocchio </span>
-                  <span>8,00 CHF</span>
-                </button>
-              </li>
-              <li className="menü-list">
-                <button
-                  type="button"
-                  class="btn btn-menü-list d-flex justify-content-between"
-                >
-                  <span>Insalata Pinocchio </span>
-                  <span>8,00 CHF</span>
-                </button>
-              </li>
-              <li className="menü-list">
-                <button
-                  type="button"
-                  class="btn btn-menü-list d-flex justify-content-between"
-                >
-                  <span>Insalata Pinocchio </span>
-                  <span>8,00 CHF</span>
-                </button>
-              </li>
-            </ul>
+            <ul className="list-unstyled">{templateMenü}</ul>
           </div>
           <div className="col"></div>
           <div className="col-6 scrollspy d-flex flex-column">
@@ -219,43 +118,7 @@ function OnlineBestellung() {
               <div className="col-4 bestellungen-title">Preis</div>
             </div>
             <div className="row my-1 text-center">
-              <div className="col-4 bestellungen-product">
-                <button type="button" class="btn btn-bestellungen">
-                  -
-                </button>
-                <span>1</span>
-                <button type="button" class="btn btn-bestellungen">
-                  +
-                </button>
-              </div>
-              <div className="col-4 bestellungen-product">Grüner Salat</div>
-              <div className="col-4 bestellungen-product">8,00</div>
-            </div>
-            <div className="row my-1 text-center">
-              <div className="col-4 bestellungen-product">
-                <button type="button" class="btn btn-bestellungen">
-                  -
-                </button>
-                <span>1</span>
-                <button type="button" class="btn btn-bestellungen">
-                  +
-                </button>
-              </div>
-              <div className="col-4 bestellungen-product">Grüner Salat</div>
-              <div className="col-4 bestellungen-product">8,00</div>
-            </div>
-            <div className="row my-1 text-center">
-              <div className="col-4 bestellungen-product">
-                <button type="button" class="btn btn-bestellungen">
-                  -
-                </button>
-                <span>1</span>
-                <button type="button" class="btn btn-bestellungen">
-                  +
-                </button>
-              </div>
-              <div className="col-4 bestellungen-product">Grüner Salat</div>
-              <div className="col-4 bestellungen-product">8,00</div>
+              <ul>{templateBestellung}</ul>
             </div>
             <div className="row my-1 text-center">
               <div className="col-4 bestellungen-product">
@@ -291,7 +154,12 @@ function OnlineBestellung() {
             <div className="mb-5">
               <form className="me-5">
                 <div class="form-check">
-                  <input className="check" type="checkbox" value="" id="flexCheckDefault" />
+                  <input
+                    className="check"
+                    type="checkbox"
+                    value=""
+                    id="flexCheckDefault"
+                  />
                   <label for="flexCheckDefault">
                     <h4 className="bestellung-form ms-2">
                       Ich möchte die Bestellung abholen
@@ -338,9 +206,7 @@ function OnlineBestellung() {
                       className="form-control me-4 p-2 pe-5"
                       required
                     />
-                    <select
-                      class="form-select ms-4"
-                    >
+                    <select class="form-select ms-4">
                       <option selected>Ich zahle bei Erhalt: * </option>
                       <option value="1">Barzahlung</option>
                       <option value="2">Karte</option>
