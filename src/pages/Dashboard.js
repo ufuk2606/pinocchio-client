@@ -12,15 +12,15 @@ function Dashboard() {
       <Row className="align-items-center profile-header mb-5 text-center text-md-left">
         <Col md={2}>
           <img
-            src={user.picture}
+            src={user?.picture}
             alt="Profile"
             className="rounded-circle img-fluid profile-picture mb-3 mb-md-0"
           />
         </Col>
         <Col md>
-          <h1 className='text-light h1'>{user.name}</h1>
-          <h1 className="lead text-white">{user.email}</h1>
-          <h1 className='text-light h1'>{user.role}</h1>
+          <h1 className='text-light h1'>{user?.name}</h1>
+          <h1 className="lead text-white">{user?.email}</h1>
+          <h1 className='text-light h1'>{user?.role}</h1>
         </Col>
       </Row>
       <Row>

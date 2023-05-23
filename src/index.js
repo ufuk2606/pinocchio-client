@@ -43,6 +43,10 @@ const router = createHashRouter([
         element: <ProtectedRoute> <OnlineBestellung /></ProtectedRoute> ,
       },
       {
+        path: "onlineBestellung/:id",
+        element: <ProtectedRoute> <OnlineBestellung /></ProtectedRoute> ,
+      },
+      {
         path: "kontakt",
         element: <ProtectedRoute> <Kontakt /></ProtectedRoute> ,
       },

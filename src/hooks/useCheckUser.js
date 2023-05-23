@@ -16,7 +16,7 @@ const useCheckUser = () => {
           role:remoteUser.role,
           id:remoteUser.id
         })
-        navigate('/dashboard');
+        navigate('/');
       } else {
         navigate('/welcome');
       }

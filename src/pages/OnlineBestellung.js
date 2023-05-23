@@ -1,17 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PageTop from "../components/PageTop";
 import Footer from "../components/Footer";
 import ReservationTabelle from "../components/ReservationTabelle";
+import { api } from "../services/httpService";
 
 function OnlineBestellung() {
   const image = "images/online-bestellung-top.jpg";
   const title = "Online Bestellung";
   const content =
     "Hier können Sie bequem online bestellen. Lassen Sie sich Zeit, klicken Sie sich durch alle Menüs und wählen Sie Ihre gewünschten Speisen und Zutaten aus. Für jeden Geschmack sollte etwas dabei sein. Nach erfolgter Bestellung wird Ihr Gericht frisch zubereitet und so schnell wie möglich geliefert. Wir wünschen Ihnen „Guten Appetit“.";
+    
+    
+    const [ currentUser, setCurrentUser] = useState();
+    const getUsers = async () => {
+      try {
+        const response = await api.get(`/onlineBestellung`);
+        setCurrentUser(response.data) 
+      } catch (error) {
+        console.error(error.message);
+        throw error;
+      }
+    };
+
+    useEffect (() => {
+      getUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+     const adi = currentUser?.map(item=><li>{item.Name}</li>)
+
+
+
   return (
     <>
       <div className="container-fluid">
         <PageTop image={image} title={title} content={content} />
+      </div>
+      <div>
+        <ul>
+        {adi}
+        </ul>
       </div>
       <div className="container">
         <ul className="row d-flex justify-content-center my-4 list-unstyled ">
@@ -60,7 +88,7 @@ function OnlineBestellung() {
                   type="button"
                   class="btn btn-menü-list d-flex justify-content-between"
                 >
-                  <span>Grüner Salat </span>
+                  <span> Gemischter Salat</span>
                   <span>8,00 CHF</span>
                 </button>
               </li>
