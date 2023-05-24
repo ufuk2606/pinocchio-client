@@ -22,7 +22,7 @@ export default function WelcomePage() {
     try {
       const { privacyPolicyAccepted, ...welcomeForm } = values;
       await userService.saveUser(welcomeForm);
-      navigate("/");
+      navigate(0);
     } catch (error) {
       console.log(error);
     }

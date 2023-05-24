@@ -10,13 +10,16 @@ function OnlineBestellung() {
   const content =
     "Hier können Sie bequem online bestellen. Lassen Sie sich Zeit, klicken Sie sich durch alle Menüs und wählen Sie Ihre gewünschten Speisen und Zutaten aus. Für jeden Geschmack sollte etwas dabei sein. Nach erfolgter Bestellung wird Ihr Gericht frisch zubereitet und so schnell wie möglich geliefert. Wir wünschen Ihnen „Guten Appetit“.";
 
-  const [currentUser, setCurrentUser] = useState();
+  const [menü, setMenü] = useState();
   const [meineBestellung, setMeineBestellung] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [amount, setAmount] = useState(1);
+
 
   const getMenü = async () => {
     try {
       const response = await api.get(`/onlineBestellung`);
-      setCurrentUser(response.data);
+      setMenü(response.data);
     } catch (error) {
       console.error(error.message);
       throw error;
@@ -31,10 +34,11 @@ function OnlineBestellung() {
   const handleClickProduct = (pProduct) => {
     const newArray = [...meineBestellung];
     newArray.push(pProduct);
+    setTotal(total+pProduct.price)
     setMeineBestellung(newArray);
   };
 
-  const templateMenü = currentUser?.map((item) => (
+  const templateMenü = menü?.map((item) => (
     <li className="menü-list" key={item.id}>
       <button
         type="button"
@@ -47,18 +51,18 @@ function OnlineBestellung() {
     </li>
   ));
   const templateBestellung = meineBestellung?.map((item) => (
-    <li className="row bestellungen-product" key={item.id}>
-      <div className="col-4 bestellungen-product">
-        <button type="button" class="btn btn-bestellungen">
+    <li className="row bestellungen-product my-3 d-flex align-items-center" key={item.id}>
+      <div className="col-4 bestellungen-product fs-5">
+        <button type="button" class="btn btn-bestellungen ">
           -
         </button>
-        <span>1</span>
-        <button type="button" class="btn btn-bestellungen">
+        <span>{amount}</span>
+        <button type="button" class="btn btn-bestellungen" onClick={(e)=>setAmount(2)}>
           +
         </button>
       </div>
-      <div className="col-4 bestellungen-product">{item.name}</div>
-      <div className="col-4 bestellungen-product">{item.price}</div>
+      <div className="col-4 bestellungen-product fs-6">{item.name}</div>
+      <div className="col-4 bestellungen-product fs-5">{item.price*amount}</div>
     </li>
   ));
 
@@ -120,24 +124,11 @@ function OnlineBestellung() {
             <div className="row my-1 text-center">
               <ul>{templateBestellung}</ul>
             </div>
-            <div className="row my-1 text-center">
-              <div className="col-4 bestellungen-product">
-                <button type="button" class="btn btn-bestellungen">
-                  -
-                </button>
-                <span>1</span>
-                <button type="button" class="btn btn-bestellungen">
-                  +
-                </button>
-              </div>
-              <div className="col-4 bestellungen-product">Grüner Salat</div>
-              <div className="col-4 bestellungen-product">8,00</div>
-            </div>
           </div>
           <div className="row text-center">
             <div className="col-8 bestellungen-title"></div>
             <div className="col-2 bestellungen-title fs-2">Gesamt</div>
-            <div className="col-2 bestellungen-title fs-2">32,00 CHF</div>
+            <div className="col-2 bestellungen-title fs-2">{total} CHF</div>
           </div>
           <div className="row text-center">
             <div className="col-8 bestellungen-title"></div>

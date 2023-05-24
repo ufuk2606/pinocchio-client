@@ -1,17 +1,45 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { createContext } from "react";
+import { createContext, useEffect, useState } from "react";
 import { initializeHttpService } from "../services/httpService";
-import useCheckUser from "../hooks/useCheckUser";
+import userService from '../services/userService';
+import { useNavigate } from "react-router-dom";
 
 export const UserContext = createContext();
 
 export const UserContextProvider = ({children}) => {
-    const { getAccessTokenSilently } = useAuth0();
+
+    const { getAccessTokenSilently, user, isAuthenticated } = useAuth0();
+
+    let navigate = useNavigate();
+    const [currentUser, setCurrentUser] = useState(user);
+
     initializeHttpService(getAccessTokenSilently, "http://localhost:8000/api/v1/");
-    let user = useCheckUser();
+    
+    const checkUser = async () => {
+        if (isAuthenticated) {
+          const remoteUser = await userService.getUser(user.email);
+          if (remoteUser) {
+            setCurrentUser({
+              ...user,
+              role:remoteUser.role,
+              id:remoteUser.id
+            })
+            navigate('/');
+          } else {
+            navigate('/welcome');
+          }
+        }
+      };
+
+      useEffect(() => {
+        checkUser();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [isAuthenticated]);
+
+
 
     return (
-        <UserContext.Provider value={user}>
+        <UserContext.Provider value={{currentUser}}>
             {children}
         </UserContext.Provider>
     )

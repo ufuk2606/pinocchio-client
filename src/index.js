@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import App from "./App";
 import "./index.css";
-import {  createHashRouter, RouterProvider } from "react-router-dom";
+import {  createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Auth0Provider } from '@auth0/auth0-react';
 import Home from "./pages/Home";
 import Speisekarten from "./pages/Speisekarten";
@@ -17,7 +17,7 @@ import WelcomePage from './pages/WelcomePage';
 import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 
-const router = createHashRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
