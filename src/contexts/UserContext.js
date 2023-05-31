@@ -12,6 +12,8 @@ export const UserContextProvider = ({children}) => {
 
     let navigate = useNavigate();
     const [currentUser, setCurrentUser] = useState(user);
+    const [meineBestellung, setMeineBestellung] = useState([]);
+    const [total, setTotal] = useState(0);
 
     initializeHttpService(getAccessTokenSilently, "http://localhost:8000/api/v1/");
     
@@ -37,9 +39,8 @@ export const UserContextProvider = ({children}) => {
       }, [isAuthenticated]);
 
 
-
     return (
-        <UserContext.Provider value={{currentUser}}>
+        <UserContext.Provider value={{currentUser, meineBestellung,setMeineBestellung,total,setTotal}}>
             {children}
         </UserContext.Provider>
     )

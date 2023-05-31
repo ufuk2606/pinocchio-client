@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
 
 function Home() {
+  useEffect(()=>{
+    window.scroll({top: 0, left: 0, behavior: 'smooth' })
+  },[])
   return (
     <>
       <div className="container-fluid">

@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PageTop from "../components/PageTop";
 import Footer from "../components/Footer";
 import ReservationTabelle from "../components/ReservationTabelle";
 import { api } from "../services/httpService";
+import { UserContext } from "../contexts/UserContext";
 
 function OnlineBestellung() {
+  useEffect(() => {
+    window.scroll({ top: 0, left: 0, behavior: "smooth" });
+  }, []);
   const image = "images/online-bestellung-top.jpg";
   const title = "Online Bestellung";
   const content =
     "Hier können Sie bequem online bestellen. Lassen Sie sich Zeit, klicken Sie sich durch alle Menüs und wählen Sie Ihre gewünschten Speisen und Zutaten aus. Für jeden Geschmack sollte etwas dabei sein. Nach erfolgter Bestellung wird Ihr Gericht frisch zubereitet und so schnell wie möglich geliefert. Wir wünschen Ihnen „Guten Appetit“.";
-
+  const { currentUser } = useContext(UserContext);
   const [menü, setMenü] = useState();
   const [meineBestellung, setMeineBestellung] = useState([]);
   const [total, setTotal] = useState(0);
-  const [amount, setAmount] = useState(1);
-
 
   const getMenü = async () => {
     try {
@@ -31,11 +33,68 @@ function OnlineBestellung() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleClickProduct = (pProduct) => {
-    const newArray = [...meineBestellung];
-    newArray.push(pProduct);
-    setTotal(total+pProduct.price)
-    setMeineBestellung(newArray);
+  const createBestellungen = async (pEmail, pBestellung) => {
+    try {
+      const response = await api.post(`/onlineBestellung/bestellungen?email=${pEmail}`,pBestellung );
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+
+  const handleClickProduct = (e, pProduct) => {
+    e.preventDefault();
+    const selectedProduct = meineBestellung.filter(
+      (product) => product.product.id === pProduct.id
+    );
+    if (selectedProduct.length === 0) {
+      const product = {
+        id: pProduct.id,
+        name: pProduct.name,
+        category: pProduct.category,
+        count: 1,
+        price: pProduct.price,
+      };
+      setTotal(total + pProduct.price);
+      setMeineBestellung([...meineBestellung, { product }]);
+    } else {
+      selectedProduct[0].product.count += 1;
+      setTotal(total + selectedProduct[0].product.price);
+    }
+  };
+  const handleIncrease = (e, pId) => {
+    e.preventDefault();
+    const selectedProduct = meineBestellung?.filter(
+      (product) => product.product.id === pId
+    );
+    selectedProduct[0].product.count += 1;
+    setTotal(total + selectedProduct[0].product.price);
+  };
+  const deleteProduct = (pId) => {
+    const selectedProduct = meineBestellung?.filter(
+      (product) => product.product.id === pId
+    );
+    const outNumber =
+      selectedProduct[0].product.price * selectedProduct[0].product.count;
+    setMeineBestellung(
+      meineBestellung.filter((product) => product.product.id !== pId)
+    );
+    setTotal(total - outNumber);
+  };
+  const handleDecrease = (e, pId) => {
+    e.preventDefault();
+    const selectedProduct = meineBestellung.filter(
+      (product) => product.product.id === pId
+    );
+
+    if (selectedProduct[0].product.count === 1) {
+      deleteProduct(pId);
+    } else {
+      selectedProduct[0].product.count -= 1;
+      setTotal(total - selectedProduct[0].product.price);
+    }
   };
 
   const templateMenü = menü?.map((item) => (
@@ -43,7 +102,7 @@ function OnlineBestellung() {
       <button
         type="button"
         class="btn btn-menü-list d-flex justify-content-between"
-        onClick={() => handleClickProduct(item)}
+        onClick={(e) => handleClickProduct(e, item)}
       >
         <span> {item.name}</span>
         <span>{item.price} CHF</span>
@@ -51,18 +110,40 @@ function OnlineBestellung() {
     </li>
   ));
   const templateBestellung = meineBestellung?.map((item) => (
-    <li className="row bestellungen-product my-3 d-flex align-items-center" key={item.id}>
+    <li
+      className="row bestellungen-product my-3 d-flex text-align-center"
+      key={item.product.id}
+    >
       <div className="col-4 bestellungen-product fs-5">
-        <button type="button" class="btn btn-bestellungen ">
+        <button
+          type="button"
+          class="btn btn-bestellungen"
+          onClick={(e) => handleDecrease(e, item.product.id)}
+        >
           -
         </button>
-        <span>{amount}</span>
-        <button type="button" class="btn btn-bestellungen" onClick={(e)=>setAmount(2)}>
+        <span>{item.product.count}</span>
+        <button
+          type="button"
+          class="btn btn-bestellungen"
+          onClick={(e) => handleIncrease(e, item.product.id)}
+        >
           +
         </button>
       </div>
-      <div className="col-4 bestellungen-product fs-6">{item.name}</div>
-      <div className="col-4 bestellungen-product fs-5">{item.price*amount}</div>
+      <div className=" col-4 bestellungen-product fs-6 mt-2">{item.product.name}</div>
+      <div className="col-2 bestellungen-product fs-4">
+        {item.product.price * item.product.count}
+      </div>
+      <div className="col-2 ">
+        <button
+          type="button"
+          class="btn"
+          onClick={(e) => deleteProduct(item.product.id)}
+        >
+          <i class="bi bi-trash fs-5 "></i>
+        </button>
+      </div>
     </li>
   ));
 
@@ -119,7 +200,8 @@ function OnlineBestellung() {
             <div className="row my-1 text-center">
               <div className="col-4 bestellungen-title">Menge</div>
               <div className="col-4 bestellungen-title">Artikel</div>
-              <div className="col-4 bestellungen-title">Preis</div>
+              <div className="col-2 bestellungen-title">Preis</div>
+              <div className="col-1"></div>
             </div>
             <div className="row my-1 text-center">
               <ul>{templateBestellung}</ul>
@@ -163,13 +245,13 @@ function OnlineBestellung() {
                       type="text"
                       placeholder="Name*"
                       className="form-control me-4 p-2"
-                      required
+                      // required
                     />
                     <input
                       type="email"
                       placeholder="Email*"
                       className="form-control ms-4 p-2"
-                      required
+                      // required
                     />
                   </div>
                 </div>
@@ -179,13 +261,13 @@ function OnlineBestellung() {
                       type="tel"
                       placeholder="Telefon*"
                       className="form-control me-4 p-2"
-                      required
+                      // required
                     />
                     <input
                       type="text"
                       placeholder="Strasse & Hausnummer *"
                       className="form-control ms-4 p-2"
-                      required
+                      // required
                     />
                   </div>
                 </div>
@@ -195,7 +277,7 @@ function OnlineBestellung() {
                       type="text"
                       placeholder="Ort*"
                       className="form-control me-4 p-2 pe-5"
-                      required
+                      // required
                     />
                     <select class="form-select ms-4">
                       <option selected>Ich zahle bei Erhalt: * </option>
@@ -215,6 +297,7 @@ function OnlineBestellung() {
                 <button
                   type="submit"
                   className="reservation-btn mt-3 px-5 py-2"
+                  onClick={(e) => createBestellungen(currentUser.email, meineBestellung)} 
                 >
                   Bestellung abschicken
                 </button>

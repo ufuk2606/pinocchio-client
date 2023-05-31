@@ -11,7 +11,6 @@ const getPosts = async (order = 'asc') => {
 };
 
 
-
 const createPost = async (pNewPost) => {
   try {
     const response = await api.post("/posts", pNewPost);

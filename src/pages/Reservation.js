@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PageTop from "../components/PageTop";
 import Footer from "../components/Footer";
 import ReservationTabelle from "../components/ReservationTabelle";
 
 function Reservation() {
+  useEffect(()=>{
+    window.scroll({top: 0, left: 0, behavior: 'smooth' })
+  },[])
   const image = "images/reservation-top.jpg";
   const title = "Reservation";
   const content =

@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PageTop from "../components/PageTop";
 import Footer from "../components/Footer";
 
 function Kontakt() {
+  useEffect(()=>{
+    window.scroll({top: 0, left: 0, behavior: 'smooth' })
+  },[])
   const image = "images/kontakt-top.jpg";
   const title = "Kontakt";
   const content =

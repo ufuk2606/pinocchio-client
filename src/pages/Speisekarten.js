@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Footer from "../components/Footer";
 import PageTop from "../components/PageTop";
 
 function Speisekarten() {
+  useEffect(()=>{
+    window.scroll({top: 0, left: 0, behavior: 'smooth' })
+  },[])
   const image = "images/speisekarte-top.jpg";
   const title = "Köstlichkeiten";
   const content =

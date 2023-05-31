@@ -1,9 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext} from "react";
+import React, { useContext, useEffect} from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { UserContext } from "../contexts/UserContext";
 
 function Dashboard() {
+  useEffect(()=>{
+    window.scroll({top: 0, left: 0, behavior: 'smooth' })
+  },[])
   const { currentUser } = useContext(UserContext);
 
   if (!currentUser) {
