@@ -4,6 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import App from "./App";
 import "./index.css";
+import 'animate.css';
+import 'animate.css/animate.min.css';
 import {  createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Auth0Provider } from '@auth0/auth0-react';
 import Home from "./pages/Home";

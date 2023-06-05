@@ -1,48 +1,78 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import PageTop from "../components/PageTop";
 import Footer from "../components/Footer";
 import ReservationTabelle from "../components/ReservationTabelle";
 import { api } from "../services/httpService";
 import { UserContext } from "../contexts/UserContext";
+import { CSSTransition } from "react-transition-group";
+import { useNavigate } from "react-router-dom";
 
 function OnlineBestellung() {
   useEffect(() => {
     window.scroll({ top: 0, left: 0, behavior: "smooth" });
   }, []);
+
+  let navigate = useNavigate();
+  const bottomRef = useRef(null);
+  const [isAnimated, setIsAnimated] = React.useState(false);
+
+  const weitermachen = () => {
+    setIsAnimated(!isAnimated);
+    setTimeout(() => {
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+    }, 1000);
+  };
+
   const image = "images/online-bestellung-top.jpg";
   const title = "Online Bestellung";
   const content =
     "Hier können Sie bequem online bestellen. Lassen Sie sich Zeit, klicken Sie sich durch alle Menüs und wählen Sie Ihre gewünschten Speisen und Zutaten aus. Für jeden Geschmack sollte etwas dabei sein. Nach erfolgter Bestellung wird Ihr Gericht frisch zubereitet und so schnell wie möglich geliefert. Wir wünschen Ihnen „Guten Appetit“.";
   const { currentUser } = useContext(UserContext);
-  const [menü, setMenü] = useState();
+  const [menü, setMenü] = useState([]);
   const [meineBestellung, setMeineBestellung] = useState([]);
   const [total, setTotal] = useState(0);
+  const [categoryTitle, setCategoryTitle] = useState("Herzliche Wilkommen");
 
-  const getMenü = async () => {
+  // const getMenü = async () => {
+  //   try {
+  //     const response = await api.get(`/onlineBestellung`);
+  //     setMenü(response.data);
+  //   } catch (error) {
+  //     console.error(error.message);
+  //     throw error;
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getMenü();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
+  const getmenüByCategory = async (pCategory) => {
     try {
-      const response = await api.get(`/onlineBestellung`);
+      const response = await api.get(
+        `/onlineBestellung/category?category=${pCategory}`
+      );
+      setCategoryTitle(pCategory);
       setMenü(response.data);
-    } catch (error) {
-      console.error(error.message);
-      throw error;
-    }
-  };
-
-  useEffect(() => {
-    getMenü();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const createBestellungen = async (pEmail, pBestellung) => {
-    try {
-      const response = await api.post(`/onlineBestellung/bestellungen?email=${pEmail}`,pBestellung );
-      return response.data;
     } catch (error) {
       console.error(error);
       throw error;
     }
   };
 
+  const createBestellungen = async (pEmail, pBestellung) => {
+    try {
+      const response = await api.post(
+        `/onlineBestellung/bestellungen?email=${pEmail}`,
+        pBestellung
+      );
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
 
   const handleClickProduct = (e, pProduct) => {
     e.preventDefault();
@@ -131,7 +161,9 @@ function OnlineBestellung() {
           +
         </button>
       </div>
-      <div className=" col-4 bestellungen-product fs-6 mt-2">{item.product.name}</div>
+      <div className=" col-4 bestellungen-product fs-6 mt-2">
+        {item.product.name}
+      </div>
       <div className="col-2 bestellungen-product fs-4">
         {item.product.price * item.product.count}
       </div>
@@ -155,27 +187,52 @@ function OnlineBestellung() {
       <div className="container">
         <ul className="row d-flex justify-content-center my-4 list-unstyled ">
           <li className="col-2 text-center mx-2">
-            <button type="button" class="btn btn-online-bestellung">
+            <button
+              type="button"
+              class="btn btn-online-bestellung"
+              value="Salate"
+              onClick={(e) => getmenüByCategory(e.target.value)}
+            >
               Salate
             </button>
           </li>
           <li className="col-2 text-center mx-2">
-            <button type="button" class="btn btn-online-bestellung">
+            <button
+              type="button"
+              class="btn btn-online-bestellung"
+              value="Pasta"
+              onClick={(e) => getmenüByCategory(e.target.value)}
+            >
               Pasta & Risotto
             </button>
           </li>
           <li className="col-2 text-center mx-2">
-            <button type="button" class="btn btn-online-bestellung">
+            <button
+              type="button"
+              class="btn btn-online-bestellung"
+              value="Pizza"
+              onClick={(e) => getmenüByCategory(e.target.value)}
+            >
               Pizza
             </button>
           </li>
           <li className="col-2 text-center mx-2">
-            <button type="button" class="btn btn-online-bestellung">
+            <button
+              type="button"
+              class="btn btn-online-bestellung"
+              value="Dessert"
+              onClick={(e) => getmenüByCategory(e.target.value)}
+            >
               Dessert
             </button>
           </li>
           <li className="col-2 text-center mx-2">
-            <button type="button" class="btn btn-online-bestellung">
+            <button
+              type="button"
+              class="btn btn-online-bestellung"
+              value="Getränke"
+              onClick={(e) => getmenüByCategory(e.target.value)}
+            >
               Getränke
             </button>
           </li>
@@ -183,7 +240,7 @@ function OnlineBestellung() {
         <div className="row">
           <div className="row text-center">
             <div className="col-5">
-              <h1 className="bestellung-title">Salate</h1>{" "}
+              <h1 className="bestellung-title"> {categoryTitle}</h1>{" "}
             </div>
             <div className="col"></div>
             <div className="col-6">
@@ -193,7 +250,18 @@ function OnlineBestellung() {
         </div>
         <div className="row mb-5">
           <div className="col-5 mb-3 scrollspy">
-            <ul className="list-unstyled">{templateMenü}</ul>
+            <ul className="list-unstyled">
+              {menü.length === 0 ? (
+                <img
+                  src="images/logo.png"
+                  width="400"
+                  className="m-5 "
+                  alt="logo"
+                />
+              ) : (
+                templateMenü
+              )}
+            </ul>
           </div>
           <div className="col"></div>
           <div className="col-6 scrollspy d-flex flex-column">
@@ -208,108 +276,97 @@ function OnlineBestellung() {
             </div>
           </div>
           <div className="row text-center">
-            <div className="col-8 bestellungen-title"></div>
-            <div className="col-2 bestellungen-title fs-2">Gesamt</div>
-            <div className="col-2 bestellungen-title fs-2">{total} CHF</div>
-          </div>
-          <div className="row text-center">
-            <div className="col-8 bestellungen-title"></div>
-            <div className="col-2 bestellungen-title fs-2">
-              <hr color="#c39d63" size="4" />
-            </div>
-            <div className="col-2 bestellungen-title fs-2">
-              <hr color="#c39d63" size="4" />
-            </div>
-          </div>
-        </div>
-        <div className="row mb-4">
-          <div className="col-6">
-            <div className="mb-5">
-              <form className="me-5">
-                <div class="form-check">
-                  <input
-                    className="check"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
-                  />
-                  <label for="flexCheckDefault">
-                    <h4 className="bestellung-form ms-2">
-                      Ich möchte die Bestellung abholen
-                    </h4>
-                  </label>
-                </div>
-                <div className="my-3 ">
-                  <div className="input-group">
-                    <input
-                      type="text"
-                      placeholder="Name*"
-                      className="form-control me-4 p-2"
-                      // required
-                    />
-                    <input
-                      type="email"
-                      placeholder="Email*"
-                      className="form-control ms-4 p-2"
-                      // required
-                    />
-                  </div>
-                </div>
-                <div className="my-3 mt-4">
-                  <div className="input-group">
-                    <input
-                      type="tel"
-                      placeholder="Telefon*"
-                      className="form-control me-4 p-2"
-                      // required
-                    />
-                    <input
-                      type="text"
-                      placeholder="Strasse & Hausnummer *"
-                      className="form-control ms-4 p-2"
-                      // required
-                    />
-                  </div>
-                </div>
-                <div className="my-3 mt-4">
-                  <div className="input-group">
-                    <input
-                      type="text"
-                      placeholder="Ort*"
-                      className="form-control me-4 p-2 pe-5"
-                      // required
-                    />
-                    <select class="form-select ms-4">
-                      <option selected>Ich zahle bei Erhalt: * </option>
-                      <option value="1">Barzahlung</option>
-                      <option value="2">Karte</option>
-                      <option value="3">Twint</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="mb-3">
-                  <textarea
-                    className="form-control"
-                    rows="5"
-                    placeholder="Mitteilung"
-                  ></textarea>
-                </div>
+            <div className="col-6"></div>
+            <div className="col-2">
+              {isAnimated ? (
+                ""
+              ) : (
                 <button
-                  type="submit"
-                  className="reservation-btn mt-3 px-5 py-2"
-                  onClick={(e) => createBestellungen(currentUser.email, meineBestellung)} 
+                  type="button"
+                  className="reservation-btn mt-3 px-4 py-2 "
+                  onClick={() => weitermachen()}
                 >
-                  Bestellung abschicken
+                  Weitermachen
                 </button>
-              </form>
+              )}
+            </div>
+            <div className="col-2 bestellungen-title fs-2">
+              <div>Gesamt</div>
+              <hr color="#c39d63" size="4" />
+            </div>
+            <div className="col-2 bestellungen-title fs-2">
+              <div>{total} CHF</div>
+              <hr color="#c39d63" size="4" />
             </div>
           </div>
-          <div className="col"></div>
-          <div className="col-5">
-            <ReservationTabelle />
-          </div>
         </div>
+        <CSSTransition
+          in={isAnimated}
+          timeout={3000} // Set the desired animation duration
+          // classNames="animate__animated animate__bounce" // CSS class name for the animation
+          unmountOnExit
+        >
+          <div className="row mb-4 text-center animate__animated animate__slideInDown">
+            <div className="col-5">
+              <ReservationTabelle />
+            </div>
+            <div className="col"></div>
+            <div className="col-6 d-flex justify-content-center align-items-center">
+              <div className="mb-5">
+                <form className="me-5">
+                  <div class="form-check">
+                    <input
+                      className="check"
+                      type="checkbox"
+                      value=""
+                      id="flexCheckDefault"
+                    />
+                    <label for="flexCheckDefault">
+                      <h4 className="bestellung-form ms-2">
+                        Ich möchte die Bestellung abholen
+                      </h4>
+                    </label>
+                  </div>
+                  <div className="my-3 mt-4">
+                    <div className="input-group">
+                      <select class="form-select ">
+                        <option selected>Ich zahle bei Erhalt: * </option>
+                        <option value="1">Barzahlung</option>
+                        <option value="2">Karte</option>
+                        <option value="3">Twint</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="mb-3">
+                    <textarea
+                      className="form-control"
+                      rows="5"
+                      placeholder="Gewünschte Uhrzeit und Mitteilung"
+                    ></textarea>
+                  </div>
+                  <button
+                    type="submit"
+                    className="reservation-btn m-3 px-5 py-2"
+                    onClick={(e) =>
+                      createBestellungen(currentUser.email, meineBestellung)
+                    }
+                  >
+                    Bestellung abschicken
+                  </button>
+                  <button
+                    type="button"
+                    className="reservation-btn m-3 px-5 py-2 "
+                    onClick={() => navigate(0)}
+                  >
+                    Stornieren
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </CSSTransition>
       </div>
+      <div ref={bottomRef}></div>
       <Footer />
     </>
   );
