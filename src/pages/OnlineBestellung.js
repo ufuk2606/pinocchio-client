@@ -15,14 +15,6 @@ function OnlineBestellung() {
   let navigate = useNavigate();
   const bottomRef = useRef(null);
   const [isAnimated, setIsAnimated] = React.useState(false);
-
-  const weitermachen = () => {
-    setIsAnimated(!isAnimated);
-    setTimeout(() => {
-      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
-    }, 1000);
-  };
-
   const image = "images/online-bestellung-top.jpg";
   const title = "Online Bestellung";
   const content =
@@ -32,6 +24,9 @@ function OnlineBestellung() {
   const [meineBestellung, setMeineBestellung] = useState([]);
   const [total, setTotal] = useState(0);
   const [categoryTitle, setCategoryTitle] = useState("Herzliche Wilkommen");
+  const [isChecked, setIsChecked] = useState(false);
+  const [mitZahle, setMitZahle] = useState("");
+  const [mitteilung, setMitteilung] = useState("");
 
   // const getMenü = async () => {
   //   try {
@@ -61,18 +56,29 @@ function OnlineBestellung() {
     }
   };
 
-  const createBestellungen = async (pEmail, pBestellung) => {
+  const createBestellungen = async (pEmail) => {
+    const newArray = meineBestellung.map((obj) => ({
+      ...obj,
+      abholen: isChecked.toString(),
+      mitZahle: mitZahle,
+      mitteilung: mitteilung,
+    }))
     try {
       const response = await api.post(
         `/onlineBestellung/bestellungen?email=${pEmail}`,
-        pBestellung
+        newArray
       );
+      setIsChecked(true);
+      setMitZahle("");
+      setMitteilung("");
       return response.data;
     } catch (error) {
       console.error(error);
       throw error;
     }
   };
+
+ 
 
   const handleClickProduct = (e, pProduct) => {
     e.preventDefault();
@@ -126,6 +132,12 @@ function OnlineBestellung() {
       setTotal(total - selectedProduct[0].product.price);
     }
   };
+  const weitermachen = () => {
+    setIsAnimated(!isAnimated);
+    setTimeout(() => {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }, 1000);
+  };
 
   const templateMenü = menü?.map((item) => (
     <li className="menü-list" key={item.id}>
@@ -178,6 +190,9 @@ function OnlineBestellung() {
       </div>
     </li>
   ));
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
 
   return (
     <>
@@ -302,8 +317,7 @@ function OnlineBestellung() {
         </div>
         <CSSTransition
           in={isAnimated}
-          timeout={3000} // Set the desired animation duration
-          // classNames="animate__animated animate__bounce" // CSS class name for the animation
+          timeout={3000}
           unmountOnExit
         >
           <div className="row mb-4 text-center animate__animated animate__slideInDown">
@@ -318,10 +332,10 @@ function OnlineBestellung() {
                     <input
                       className="check"
                       type="checkbox"
-                      value=""
-                      id="flexCheckDefault"
+                      onChange={handleCheckboxChange}
+                      id="abholen"
                     />
-                    <label for="flexCheckDefault">
+                    <label for="abholen">
                       <h4 className="bestellung-form ms-2">
                         Ich möchte die Bestellung abholen
                       </h4>
@@ -329,11 +343,14 @@ function OnlineBestellung() {
                   </div>
                   <div className="my-3 mt-4">
                     <div className="input-group">
-                      <select class="form-select ">
+                      <select
+                        class="form-select "
+                        onChange={(e) => setMitZahle(e.target.value)}
+                      >
                         <option selected>Ich zahle bei Erhalt: * </option>
-                        <option value="1">Barzahlung</option>
-                        <option value="2">Karte</option>
-                        <option value="3">Twint</option>
+                        <option value="Barzahlung">Barzahlung</option>
+                        <option value="Karte">Karte</option>
+                        <option value="Twint">Twint</option>
                       </select>
                     </div>
                   </div>
@@ -342,14 +359,14 @@ function OnlineBestellung() {
                       className="form-control"
                       rows="5"
                       placeholder="Gewünschte Uhrzeit und Mitteilung"
+                      value={mitteilung}
+                      onChange={(e) => setMitteilung(e.target.value)}
                     ></textarea>
                   </div>
                   <button
                     type="submit"
                     className="reservation-btn m-3 px-5 py-2"
-                    onClick={(e) =>
-                      createBestellungen(currentUser.email, meineBestellung)
-                    }
+                    onClick={(e) => createBestellungen(currentUser.email)}
                   >
                     Bestellung abschicken
                   </button>
