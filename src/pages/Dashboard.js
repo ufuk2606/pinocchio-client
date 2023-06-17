@@ -9,6 +9,7 @@ function Dashboard() {
   useEffect(() => {
     window.scroll({ top: 0, left: 0, behavior: "smooth" });
     getUser();
+    getUserImage()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -19,8 +20,11 @@ function Dashboard() {
   const [nameMonatsHits, setNameMonatsHits] = useState("");
   const [contentMonatsHits, setContentMonatsHits] = useState("");
   const [priceMonatsHits, setPriceMonatsHits] = useState(0);
-  const [user, setUser] = useState("");
+  const [mittagsmenu, setMittagsmenu] = useState("");
+  const [speisekartenmenu, setSpeisekartenmenu] = useState("");
+  
 
+  const [user, setUser] = useState("");
   // eslint-disable-next-line no-unused-vars
   const [userFirstName, setUserFirstName] = useState("");
   const [userLastName, setUserLastName] = useState("");
@@ -28,8 +32,7 @@ function Dashboard() {
   const [userTelefon, setUserTelefon] = useState("");
   const [userStreet, setUserStreet] = useState("");
   const [userPlace, setUserPlace] = useState("");
-  // eslint-disable-next-line no-unused-vars
-  const [userPicture, setUserPicture] = useState(currentUser?.picture);
+  const [userImage, setUserImage] = useState("");
 
   useEffect(() => {
     if (user?.firstName) {
@@ -66,9 +69,39 @@ function Dashboard() {
         `/dashboard/dashboard?email=${user.email}`,
         updatedUser
       );
-      await getUser(); 
-      window.location.reload()
+      await getUser();
       return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const updateImage = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("profileImage", userImage);
+    try {
+      const response = await api.put(
+        `/dashboard/image?email=${user?.email}`,
+        formData
+      );
+      getUserImage();
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const getUserImage = async () => {
+    try {
+      const response = await api.get(`/dashboard/image?email=${currentUser?.email}`);
+      const baseURL = response.config.baseURL;
+      const imageBaseURL = baseURL.slice(0, -1);
+      const imageURL = imageBaseURL + response.config.url
+      setUserImage(imageURL);
+      return imageURL;
     } catch (error) {
       console.error(error);
       throw error;
@@ -111,12 +144,71 @@ function Dashboard() {
     }
   };
 
+  const createMittagsmenu = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('mittagsmenu', mittagsmenu, 'mittagsmenu.pdf'); // Dosya adını belirtin
+  
+    try {
+      const response = await api.post(`/dashboard/mittagsmenu`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Form verisi olarak gönderileceği için 'multipart/form-data' olarak ayarlayın
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const createSpeisekartenmenu = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('speisekartenmenu', speisekartenmenu, 'speisekartenmenu.pdf');
+    try {
+      const response = await api.post(`/dashboard/speisekartenmenu`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', 
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+
   if (!user) {
     return null;
   }
 
   return (
     <div className="container mb-5">
+      <div>
+        <label className="update_label">
+          Image:
+          <br />
+          <input
+            className="update_form"
+            type="file"
+            name="profileImage"
+            onChange={(e) => {
+              setUserImage(e.currentTarget.files[0]);
+            }}
+          />
+        </label>
+        <br />
+        <button
+          onClick={(e) => {
+            updateImage(e);
+          }}
+          className="text-primary border-0 px-4 py-3 rounded-2"
+        >
+          update Image
+        </button>
+      </div>
       <div>
         <div class="page-content page-container" id="page-content">
           <div class="padding">
@@ -128,12 +220,15 @@ function Dashboard() {
                       <div class="card-block text-center text-white">
                         <div class="m-b-25">
                           <img
-                            src={userPicture}
+                            // src={user?.profilImage === "null" ? currentUser?.picture : userImage}
+                            src={userImage}
+                            // src={user?.profilImage}
+                            // src={currentUser?.picture }
                             className="card-img-top rounded-circle shadow p-1 rounded"
                             alt="profil foto"
                           />
                         </div>
-                        
+
                         <h4 class="f-w-600">
                           {user?.firstName} {user?.lastName}
                         </h4>
@@ -150,11 +245,15 @@ function Dashboard() {
                         <div class="row">
                           <div class="col-sm-6">
                             <p class="m-b-10 f-w-600">Email</p>
-                            <h6 class="text-muted f-w-400 mb-3">{user?.email}</h6>
+                            <h6 class="text-muted f-w-400 mb-3">
+                              {user?.email}
+                            </h6>
                           </div>
                           <div class="col-sm-6">
                             <p class="m-b-10 f-w-600">Phone</p>
-                            <h6 class="text-muted f-w-400 mb-3">{user?.telefon}</h6>
+                            <h6 class="text-muted f-w-400 mb-3">
+                              {user?.telefon}
+                            </h6>
                           </div>
                         </div>
                         <hr />
@@ -271,7 +370,14 @@ function Dashboard() {
                 </form>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn reservation-btn" data-bs-dismiss="modal" onClick={(e)=>{updatePerson(e)}}>
+                <button
+                  type="button"
+                  className="btn reservation-btn"
+                  data-bs-dismiss="modal"
+                  onClick={(e) => {
+                    updatePerson(e);
+                  }}
+                >
                   Save changes
                 </button>
               </div>
@@ -279,35 +385,6 @@ function Dashboard() {
           </div>
         </div>
       </div>
-
-      {/* <div className="container ">
-        <h1 className="text-center my-5 uberUns-title">Profil</h1>
-        <div className="row row-cols-1 row-cols-md-4 d-flex justify-content-center">
-          <div className="col">
-            <div className="card h-100 border-0 ">
-              <img
-                src={currentUser?.picture}
-                className="card-img-top rounded-circle shadow p-1 rounded"
-                alt="profil foto"
-              />
-            </div>
-          </div>
-          <div className="col">
-            <div className="card-body">
-              <h1 className="card-title ms-5 my-3">
-                {user?.firstName} {user?.lastName}
-              </h1>
-              <h5 className="card-title-2 ms-5 mb-2">{currentUser?.email}</h5>
-              <h5 className="card-title-2 ms-5 mb-2">{user?.telefon}</h5>
-              <h5 className="card-title-2 ms-5 mb-2">
-                {user?.place} {user?.street}
-              </h5>
-              <h5 className="card-title-2 ms-5 mb-2">{user?.role}</h5>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
       <hr />
       <Row>Admin</Row>
       <div>
@@ -406,6 +483,60 @@ function Dashboard() {
               type="submit"
               className="reservation-btn my-3 px-4 col rounded-4"
               onClick={(e) => createMonatsHits()}
+            >
+              SENDEN
+            </button>
+          </form>
+        </div>
+        <hr />
+        <div className="col-8 mb-5 container">
+          <h1 className="reservation-title text-center mt-5">
+            Mittagsmenü hinzufügen
+          </h1>
+          <form className="me-5 d-flex justify-content-around gap-4">
+            <div className="my-3 mt-4 col-5">
+              <div className="input-group">
+                <input
+                  type="file"
+                  placeholder="pdf seciniz"
+                  className="form-control p-2"
+                  name="mittagsmenu"
+                  onChange={(e) => setMittagsmenu(e.currentTarget.files[0])}
+                  required
+                />
+              </div>
+            </div>
+            <button
+              type="submit"
+              className="reservation-btn my-3 px-4 col rounded-4"
+              onClick={(e) => createMittagsmenu(e)}
+            >
+              SENDEN
+            </button>
+          </form>
+        </div>
+        <hr />
+        <div className="col-8 mb-5 container">
+          <h1 className="reservation-title text-center mt-5">
+            Speisekarten Menü hinzufügen
+          </h1>
+          <form className="me-5 d-flex justify-content-around gap-4">
+            <div className="my-3 mt-4 col-5">
+              <div className="input-group">
+                <input
+                  type="file"
+                  placeholder="pdf seciniz"
+                  className="form-control p-2"
+                  name="speisekartenmenü"
+                  onChange={(e) => setSpeisekartenmenu(e.currentTarget.files[0])}
+                  required
+                />
+              </div>
+            </div>
+            <button
+              type="submit"
+              className="reservation-btn my-3 px-4 col rounded-4"
+              onClick={(e) => createSpeisekartenmenu(e)}
             >
               SENDEN
             </button>

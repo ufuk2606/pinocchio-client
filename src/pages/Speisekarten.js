@@ -27,6 +27,34 @@ function Speisekarten() {
     }
   };
 
+  const getMittagsmenu = async () => {
+    try {
+      const response = await api.get("/speisekarten/mittagsmenu", {
+        responseType: "blob",
+      });
+  
+      const blobURL = window.URL.createObjectURL(response.data);
+  
+      window.open(blobURL);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getSpeisekarte = async () => {
+    try {
+      const response = await api.get("/speisekarten/speisekartenmenu", {
+        responseType: "blob",
+      });
+  
+      const blobURL = window.URL.createObjectURL(response.data);
+  
+      window.open(blobURL);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <div className="container-fluid">
@@ -37,27 +65,22 @@ function Speisekarten() {
             <h1 className="row3-title2">
               Frische Zutaten <br /> Köstliche Gerichte
             </h1>
-            <div className="row my-5">
+            <div className="row my-5 d-flex justify-content-center">
               <div className="col-3 speisenkarte-menüs">
-                <a
-                  href="speisenkartenMenüs/Speisekarte_2022.pdf"
-                  target="_blank"
-                >
-                  <img
-                    width="210"
-                    src="images/Speisekarte.png"
-                    alt="Speisekarte-menü"
-                  />
-                </a>
+                <img
+                  onClick={(e)=>getSpeisekarte()}
+                  width="210"
+                  src="images/Speisekarte.png"
+                  alt="Speisekarte-menü"
+                />
               </div>
               <div className="col-3 speisenkarte-menüs">
-                <a href="speisenkartenMenüs/Mittagsmenus.pdf" target="_blank">
-                  <img
-                    width="210"
-                    src="images/Mittagsmenüs.png"
-                    alt="Mittagsmenüs"
-                  />
-                </a>
+                <img
+                  onClick={(e)=>getMittagsmenu()}
+                  width="210"
+                  src="images/Mittagsmenüs.png"
+                  alt="Mittagsmenu"
+                />
               </div>
               <div className="col-3 speisenkarte-menüs">
                 <img
@@ -65,14 +88,6 @@ function Speisekarten() {
                   src="images/Monatshits.png"
                   onClick={handleDownloadPDF}
                   alt="Monatshits"
-                />
-              </div>
-              <div className="col-3 speisenkarte-menüs">
-                <img
-                  onClick={handleDownloadPDF}
-                  width="210"
-                  src="images/Hausgemachtes.png"
-                  alt="Hausgemachtes"
                 />
               </div>
             </div>
