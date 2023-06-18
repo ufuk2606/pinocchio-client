@@ -1,19 +1,24 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useContext, useEffect, useState } from "react";
-import { Row } from "react-bootstrap";
+import { Toast, Row } from "react-bootstrap";
 import { UserContext } from "../contexts/UserContext";
 import { api } from "../services/httpService";
 import userService from "../services/userService";
+import { Link } from "react-router-dom";
 
 function Dashboard() {
   useEffect(() => {
     window.scroll({ top: 0, left: 0, behavior: "smooth" });
     getUser();
-    getUserImage()
+    getUserImage();
+    getTotalVerkauf();
+    getAlteMenuByUserId();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, meineBestellung, setMeineBestellung, total, setTotal } =
+    useContext(UserContext);
+
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState(0);
@@ -22,10 +27,10 @@ function Dashboard() {
   const [priceMonatsHits, setPriceMonatsHits] = useState(0);
   const [mittagsmenu, setMittagsmenu] = useState("");
   const [speisekartenmenu, setSpeisekartenmenu] = useState("");
-  
+  const [totalVerkauf, setTotalVerkauf] = useState(0);
+  const [menü, setMenü] = useState([]);
 
   const [user, setUser] = useState("");
-  // eslint-disable-next-line no-unused-vars
   const [userFirstName, setUserFirstName] = useState("");
   const [userLastName, setUserLastName] = useState("");
   const [userEmail, setUserEmail] = useState("");
@@ -33,6 +38,7 @@ function Dashboard() {
   const [userStreet, setUserStreet] = useState("");
   const [userPlace, setUserPlace] = useState("");
   const [userImage, setUserImage] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     if (user?.firstName) {
@@ -96,10 +102,12 @@ function Dashboard() {
 
   const getUserImage = async () => {
     try {
-      const response = await api.get(`/dashboard/image?email=${currentUser?.email}`);
+      const response = await api.get(
+        `/dashboard/image?email=${currentUser?.email}`
+      );
       const baseURL = response.config.baseURL;
       const imageBaseURL = baseURL.slice(0, -1);
-      const imageURL = imageBaseURL + response.config.url
+      const imageURL = imageBaseURL + response.config.url;
       setUserImage(imageURL);
       return imageURL;
     } catch (error) {
@@ -147,12 +155,12 @@ function Dashboard() {
   const createMittagsmenu = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('mittagsmenu', mittagsmenu, 'mittagsmenu.pdf'); // Dosya adını belirtin
-  
+    formData.append("mittagsmenu", mittagsmenu, "mittagsmenu.pdf"); // Dosya adını belirtin
+
     try {
       const response = await api.post(`/dashboard/mittagsmenu`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data', // Form verisi olarak gönderileceği için 'multipart/form-data' olarak ayarlayın
+          "Content-Type": "multipart/form-data", // Form verisi olarak gönderileceği için 'multipart/form-data' olarak ayarlayın
         },
       });
       return response.data;
@@ -165,11 +173,15 @@ function Dashboard() {
   const createSpeisekartenmenu = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('speisekartenmenu', speisekartenmenu, 'speisekartenmenu.pdf');
+    formData.append(
+      "speisekartenmenu",
+      speisekartenmenu,
+      "speisekartenmenu.pdf"
+    );
     try {
       const response = await api.post(`/dashboard/speisekartenmenu`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data', 
+          "Content-Type": "multipart/form-data",
         },
       });
       return response.data;
@@ -179,6 +191,66 @@ function Dashboard() {
     }
   };
 
+  const getTotalVerkauf = async () => {
+    try {
+      const response = await api.get(`/dashboard/total`);
+      setTotalVerkauf(response.data);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const getAlteMenuByUserId = async () => {
+    try {
+      const response = await api.get(
+        `/dashboard/altebestellungen?email=${currentUser?.email}`
+      );
+      setMenü(response.data);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const handleClickProduct = (e, pProduct) => {
+    e.preventDefault();
+    setShowToast(true);
+    const selectedProduct = meineBestellung.filter(
+      (product) => product.product.id === pProduct.id
+    );
+    if (selectedProduct.length === 0) {
+      const product = {
+        id: pProduct.id,
+        name: pProduct.name,
+        category: pProduct.category,
+        count: 1,
+        price: pProduct.price,
+      };
+      setTotal(total + pProduct.price);
+      setMeineBestellung([...meineBestellung, { product }]);
+    } else {
+      selectedProduct[0].product.count += 1;
+      setTotal(total + selectedProduct[0].product.price);
+    }
+  };
+
+  const templateMenü = menü?.map((item) => (
+    <li className="menü-list" key={item.id}>
+      <button
+        type="button"
+        className="btn btn-menü-list py-2 d-flex justify-content-between"
+        onClick={(e) => handleClickProduct(e, item)}
+      >
+        <span>{item.name}</span>
+        <span>{item.price} CHF</span>
+        <span>{new Date(item.createdAt).toLocaleDateString("tr-TR")}</span>
+      </button>
+    </li>
+  ));
 
   if (!user) {
     return null;
@@ -187,30 +259,7 @@ function Dashboard() {
   return (
     <div className="container mb-5">
       <div>
-        <label className="update_label">
-          Image:
-          <br />
-          <input
-            className="update_form"
-            type="file"
-            name="profileImage"
-            onChange={(e) => {
-              setUserImage(e.currentTarget.files[0]);
-            }}
-          />
-        </label>
-        <br />
-        <button
-          onClick={(e) => {
-            updateImage(e);
-          }}
-          className="text-primary border-0 px-4 py-3 rounded-2"
-        >
-          update Image
-        </button>
-      </div>
-      <div>
-        <div class="page-content page-container" id="page-content">
+        <div class="page-content page-container mt-5" id="page-content">
           <div class="padding">
             <div class="row container d-flex justify-content-center">
               <div class="col-xl-8 col-md-12">
@@ -218,22 +267,27 @@ function Dashboard() {
                   <div class="row m-l-0 m-r-0">
                     <div class="col-sm-4 bg-c-lite-green user-profile">
                       <div class="card-block text-center text-white">
-                        <div class="m-b-25">
+                        <div class="m-b-25 profil-foto-image">
                           <img
-                            // src={user?.profilImage === "null" ? currentUser?.picture : userImage}
                             src={userImage}
-                            // src={user?.profilImage}
-                            // src={currentUser?.picture }
                             className="card-img-top rounded-circle shadow p-1 rounded"
                             alt="profil foto"
                           />
+                          <div className="d-flex justify-content-end mt-5 py-5 px-4">
+                            <button
+                              type="button"
+                              className="btn reservation-btn profil-foto-btn rounded-5"
+                              data-bs-toggle="modal"
+                              data-bs-target="#fotoChange"
+                            >
+                              Foto ändern
+                            </button>
+                          </div>
                         </div>
-
                         <h4 class="f-w-600">
                           {user?.firstName} {user?.lastName}
                         </h4>
                         <p>Bester Kunde</p>
-                        <i class=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
                       </div>
                     </div>
                     <div class="col-sm-8">
@@ -241,7 +295,6 @@ function Dashboard() {
                         <h4 class="m-b-20 p-b-5 b-b-default f-w-600 my-4">
                           Information
                         </h4>
-
                         <div class="row">
                           <div class="col-sm-6">
                             <p class="m-b-10 f-w-600">Email</p>
@@ -382,6 +435,102 @@ function Dashboard() {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          className="modal fade"
+          id="fotoChange"
+          tabIndex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLabel">
+                  Update Foto
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <form className="me-5">
+                  <div>
+                    <input
+                      className="update_form"
+                      type="file"
+                      name="profileImage"
+                      onChange={(e) => {
+                        setUserImage(e.currentTarget.files[0]);
+                      }}
+                    />
+                  </div>
+                </form>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn reservation-btn"
+                  data-bs-dismiss="modal"
+                  onClick={(e) => {
+                    updateImage(e);
+                  }}
+                >
+                  Foto ändern
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div className="row d-flex justify-content-center">
+        <h1 className="reservation-title text-center mt-5">
+          Meine Alten Bestellungen
+        </h1>
+        <div className="col-8 mb-3 mt-5 scrollspy d-flex justify-content-between">
+          <ul className="list-unstyled " style={{ width: "500px" }}>
+            <p className="bestellungen-product">Sie können erneut bestellen</p>
+            {menü.length === 0 ? (
+              <img
+                src="images/logo.png"
+                width="400"
+                className="m-5 "
+                alt="logo"
+              />
+            ) : (
+              templateMenü
+            )}
+          </ul>
+          <div className="col-4">
+            <Link to="/onlineBestellung">
+              <button className="reservation-btn mt-2 px-4 pb-2 col rounded-2">
+                Meinen Bestellungen{" "}
+                <i class="bi bi-box-arrow-in-right fs-4 ms-3"></i>
+              </button>
+            </Link>
+            <Toast
+              show={showToast}
+              onClose={() => setShowToast(false)}
+              delay={3000}
+              autohide
+              className="mt-2"
+            >
+              <Toast.Header>
+                <strong className="me-auto ">Pizzeria-Pinocchio</strong>
+              </Toast.Header>
+              <Toast.Body>
+                {" "}
+                <i class="bi bi-arrow-up-circle-fill fs-5 me-2 text-warning"></i>{" "}
+                Meinen Bestellungen hinzugefügt
+              </Toast.Body>
+            </Toast>
           </div>
         </div>
       </div>
@@ -528,19 +677,27 @@ function Dashboard() {
                   placeholder="pdf seciniz"
                   className="form-control p-2"
                   name="speisekartenmenü"
-                  onChange={(e) => setSpeisekartenmenu(e.currentTarget.files[0])}
+                  onChange={(e) =>
+                    setSpeisekartenmenu(e.currentTarget.files[0])
+                  }
                   required
                 />
               </div>
             </div>
             <button
               type="submit"
-              className="reservation-btn my-3 px-4 col rounded-4"
+              className="reservation-btn my-3 col rounded-4"
               onClick={(e) => createSpeisekartenmenu(e)}
             >
               SENDEN
             </button>
           </form>
+        </div>
+        <hr />
+        <div className="col-8 mb-5 container">
+          <h2 className="reservation-title text-center mt-5 fs-2">
+            Monatlicher Verkaufsbetrag = {totalVerkauf} CHF
+          </h2>
         </div>
         <hr />
       </div>

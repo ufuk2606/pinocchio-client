@@ -19,29 +19,13 @@ function OnlineBestellung() {
   const title = "Online Bestellung";
   const content =
     "Hier können Sie bequem online bestellen. Lassen Sie sich Zeit, klicken Sie sich durch alle Menüs und wählen Sie Ihre gewünschten Speisen und Zutaten aus. Für jeden Geschmack sollte etwas dabei sein. Nach erfolgter Bestellung wird Ihr Gericht frisch zubereitet und so schnell wie möglich geliefert. Wir wünschen Ihnen „Guten Appetit“.";
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, meineBestellung, setMeineBestellung, total, setTotal } = useContext(UserContext);
   const [menü, setMenü] = useState([]);
-  const [meineBestellung, setMeineBestellung] = useState([]);
-  const [total, setTotal] = useState(0);
   const [categoryTitle, setCategoryTitle] = useState("Herzliche Wilkommen");
   const [isChecked, setIsChecked] = useState(false);
   const [mitZahle, setMitZahle] = useState("");
   const [mitteilung, setMitteilung] = useState("");
 
-  // const getMenü = async () => {
-  //   try {
-  //     const response = await api.get(`/onlineBestellung`);
-  //     setMenü(response.data);
-  //   } catch (error) {
-  //     console.error(error.message);
-  //     throw error;
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getMenü();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   const getmenüByCategory = async (pCategory) => {
     try {
@@ -151,6 +135,7 @@ function OnlineBestellung() {
       </button>
     </li>
   ));
+  
   const templateBestellung = meineBestellung?.map((item) => (
     <li
       className="row bestellungen-product my-3 d-flex text-align-center"
