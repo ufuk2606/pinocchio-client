@@ -39,6 +39,7 @@ function Dashboard() {
   const [userPlace, setUserPlace] = useState("");
   const [userImage, setUserImage] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const [galleryImage, setGalleryImage] = useState([]);
 
   useEffect(() => {
     if (user?.firstName) {
@@ -208,7 +209,6 @@ function Dashboard() {
         `/dashboard/altebestellungen?email=${currentUser?.email}`
       );
       setMenü(response.data);
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error(error);
@@ -235,6 +235,26 @@ function Dashboard() {
     } else {
       selectedProduct[0].product.count += 1;
       setTotal(total + selectedProduct[0].product.price);
+    }
+  };
+
+  const addGalleryImage = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+
+    for (let i = 0; i <galleryImage.length; i++) {
+      formData.append("galleryImage", galleryImage[i]);
+    }
+
+    try {
+      const response = await api.post(
+        `/dashboard/galleryImage`,
+        formData
+      );
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   };
 
@@ -691,6 +711,32 @@ function Dashboard() {
             >
               SENDEN
             </button>
+          </form>
+        </div>
+        <hr />
+        <div>
+          <form className="me-5">
+            <div>
+              <input
+                className="update_form"
+                type="file"
+                name="galleryImage"
+                multiple
+                onChange={(e) => {
+                  setGalleryImage(e.currentTarget.files);
+                }}
+              />
+               <button
+                  type="button"
+                  className="btn reservation-btn"
+                  onClick={(e) => {
+                    addGalleryImage(e);
+                  }}
+                >
+                  Foto hinzufügen
+                </button>
+            </div>
+           
           </form>
         </div>
         <hr />
