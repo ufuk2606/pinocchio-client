@@ -19,13 +19,20 @@ function OnlineBestellung() {
   const title = "Online Bestellung";
   const content =
     "Hier können Sie bequem online bestellen. Lassen Sie sich Zeit, klicken Sie sich durch alle Menüs und wählen Sie Ihre gewünschten Speisen und Zutaten aus. Für jeden Geschmack sollte etwas dabei sein. Nach erfolgter Bestellung wird Ihr Gericht frisch zubereitet und so schnell wie möglich geliefert. Wir wünschen Ihnen „Guten Appetit“.";
-  const { currentUser, meineBestellung, setMeineBestellung, total, setTotal } = useContext(UserContext);
+  const {
+    currentUser,
+    meineBestellung,
+    setMeineBestellung,
+    total,
+    setTotal,
+    totalCounter,
+    setTotalCounter,
+  } = useContext(UserContext);
   const [menü, setMenü] = useState([]);
   const [categoryTitle, setCategoryTitle] = useState("Herzliche Wilkommen");
   const [isChecked, setIsChecked] = useState(false);
   const [mitZahle, setMitZahle] = useState("");
   const [mitteilung, setMitteilung] = useState("");
-
 
   const getmenüByCategory = async (pCategory) => {
     try {
@@ -39,14 +46,13 @@ function OnlineBestellung() {
       throw error;
     }
   };
-
   const createBestellungen = async (pEmail) => {
     const newArray = meineBestellung.map((obj) => ({
       ...obj,
       abholen: isChecked.toString(),
       mitZahle: mitZahle,
       mitteilung: mitteilung,
-    }))
+    }));
     try {
       const response = await api.post(
         `/onlineBestellung/bestellungen?email=${pEmail}`,
@@ -61,9 +67,6 @@ function OnlineBestellung() {
       throw error;
     }
   };
-
- 
-
   const handleClickProduct = (e, pProduct) => {
     e.preventDefault();
     const selectedProduct = meineBestellung.filter(
@@ -79,8 +82,10 @@ function OnlineBestellung() {
       };
       setTotal(total + pProduct.price);
       setMeineBestellung([...meineBestellung, { product }]);
+      setTotalCounter(totalCounter + 1);
     } else {
       selectedProduct[0].product.count += 1;
+      setTotalCounter(totalCounter + 1);
       setTotal(total + selectedProduct[0].product.price);
     }
   };
@@ -90,6 +95,7 @@ function OnlineBestellung() {
       (product) => product.product.id === pId
     );
     selectedProduct[0].product.count += 1;
+    setTotalCounter(totalCounter + 1);
     setTotal(total + selectedProduct[0].product.price);
   };
   const deleteProduct = (pId) => {
@@ -102,12 +108,14 @@ function OnlineBestellung() {
       meineBestellung.filter((product) => product.product.id !== pId)
     );
     setTotal(total - outNumber);
+    setTotalCounter(totalCounter - selectedProduct[0].product.count);
   };
   const handleDecrease = (e, pId) => {
     e.preventDefault();
     const selectedProduct = meineBestellung.filter(
       (product) => product.product.id === pId
     );
+    setTotalCounter(totalCounter - 1);
 
     if (selectedProduct[0].product.count === 1) {
       deleteProduct(pId);
@@ -135,7 +143,7 @@ function OnlineBestellung() {
       </button>
     </li>
   ));
-  
+
   const templateBestellung = meineBestellung?.map((item) => (
     <li
       className="row bestellungen-product my-3 d-flex text-align-center"
@@ -281,13 +289,19 @@ function OnlineBestellung() {
               {isAnimated ? (
                 ""
               ) : (
-                <button
-                  type="button"
-                  className="reservation-btn mt-3 px-4 py-2 "
-                  onClick={() => weitermachen()}
-                >
-                  Weitermachen
-                </button>
+                <div>
+                  {meineBestellung.length === 0 ? (
+                    <p className="reservation-btn mt-3 px-4 py-2">Ihr Warenkorb ist leer.</p>
+                  ) : (
+                    <button
+                      type="button"
+                      className="reservation-btn mt-3 px-4 py-2"
+                      onClick={weitermachen}
+                    >
+                      Weitermachen
+                    </button>
+                  )}
+                </div>
               )}
             </div>
             <div className="col-2 bestellungen-title fs-2">
@@ -300,11 +314,7 @@ function OnlineBestellung() {
             </div>
           </div>
         </div>
-        <CSSTransition
-          in={isAnimated}
-          timeout={3000}
-          unmountOnExit
-        >
+        <CSSTransition in={isAnimated} timeout={3000} unmountOnExit>
           <div className="row mb-4 text-center animate__animated animate__slideInDown">
             <div className="col-5">
               <ReservationTabelle />
@@ -331,9 +341,12 @@ function OnlineBestellung() {
                       <select
                         class="form-select "
                         onChange={(e) => setMitZahle(e.target.value)}
+                        required
                       >
-                        <option selected>Ich zahle bei Erhalt: * </option>
-                        <option value="Barzahlung">Barzahlung</option>
+                        <option>Ich zahle bei Erhalt: * </option>
+                        <option value="Barzahlung" selected>
+                          Barzahlung
+                        </option>
                         <option value="Karte">Karte</option>
                         <option value="Twint">Twint</option>
                       </select>

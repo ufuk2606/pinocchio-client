@@ -14,6 +14,7 @@ export const UserContextProvider = ({children}) => {
     const [currentUser, setCurrentUser] = useState(user);
     const [meineBestellung, setMeineBestellung] = useState([]);
     const [total, setTotal] = useState(0);
+    const [totalCounter, setTotalCounter] = useState(0);
 
     initializeHttpService(getAccessTokenSilently, "http://localhost:8000/api/v1/");
     
@@ -40,7 +41,7 @@ export const UserContextProvider = ({children}) => {
 
 
     return (
-        <UserContext.Provider value={{currentUser, meineBestellung,setMeineBestellung,total,setTotal}}>
+        <UserContext.Provider value={{currentUser, meineBestellung,setMeineBestellung,total,setTotal,totalCounter, setTotalCounter}}>
             {children}
         </UserContext.Provider>
     )

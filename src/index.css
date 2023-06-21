@@ -167,6 +167,10 @@ body {
   font-size: 18px;
   line-height: 31px;
   font-weight: 500;
+  text-decoration: none;
+}
+.footer-link:hover{
+  color: #e0e0e0;
 }
 .speisenkarte-menüs:hover {
   box-shadow: 0px 5px 10px 0px rgba(119, 119, 119, 0.5);
@@ -465,4 +469,6 @@ p {
   transition: all 0.3s ease-in-out;
 }
 
-
+.animate-on-scroll {
+  visibility: hidden;
+}

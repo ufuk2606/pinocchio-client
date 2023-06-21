@@ -8,6 +8,25 @@ function Speisekarten() {
     window.scroll({ top: 0, left: 0, behavior: "smooth" });
   }, []);
 
+  document.addEventListener("scroll", function () {
+    var element = document.getElementById("animate-div-left");
+    var position = element.getBoundingClientRect();
+  
+    // Sayfanın alt kısmına doğru kaydıkça animasyonu başlat
+    if (position.top <= window.innerHeight) {
+      element.classList.add("animate__slideInLeft");
+    }
+  });
+  document.addEventListener("scroll", function () {
+    var element = document.getElementById("animate-div-right");
+    var position = element.getBoundingClientRect();
+  
+    // Sayfanın alt kısmına doğru kaydıkça animasyonu başlat
+    if (position.top <= window.innerHeight) {
+      element.classList.add("animate__slideInRight");
+    }
+  });
+
   const image = "images/speisekarte-top.jpg";
   const title = "Köstlichkeiten";
   const content =
@@ -66,7 +85,7 @@ function Speisekarten() {
               Frische Zutaten <br /> Köstliche Gerichte
             </h1>
             <div className="row my-5 d-flex justify-content-center">
-              <div className="col-3 speisenkarte-menüs">
+              <div className="col-3 speisenkarte-menüs animate__animated animate__slow" id="animate-div-left">
                 <img
                   onClick={(e)=>getSpeisekarte()}
                   width="210"
@@ -82,7 +101,7 @@ function Speisekarten() {
                   alt="Mittagsmenu"
                 />
               </div>
-              <div className="col-3 speisenkarte-menüs">
+              <div className="col-3 speisenkarte-menüs animate__animated animate__slow" id="animate-div-right">
                 <img
                   width="210"
                   src="images/Monatshits.png"

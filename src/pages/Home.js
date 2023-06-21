@@ -7,6 +7,23 @@ function Home() {
   useEffect(()=>{
     window.scroll({top: 0, left: 0, behavior: 'smooth' })
   },[])
+
+  document.addEventListener("scroll", function () {
+    var elements = document.getElementsByClassName("animate-on-scroll");
+  
+    for (var i = 0; i < elements.length; i++) {
+      var element = elements[i];
+      var position = element.getBoundingClientRect();
+  
+      // Sayfanın alt kısmına doğru kaydıkça animasyonu başlat
+      if (position.top <= window.innerHeight) {
+        element.classList.add("animate__flipInX");
+        element.style.visibility = "visible";
+      }
+    }
+  });
+  
+
   return (
     <>
       <div className="container-fluid">
@@ -110,7 +127,7 @@ function Home() {
               </div>
               <div className="col-4 p-0">
               <img
-                className="row4-picture"
+                className="row4-picture animate__animated animate-on-scroll animate__slow"
                 src="images/row4-1.jpg"
                 alt="getränke"
               />
@@ -122,9 +139,9 @@ function Home() {
               </div>
             </div>
             <div className="row">
-            <div className="col-4 p-0">
+            <div className="col-4 p-0 ">
               <img
-                className="row4-picture"
+                className="row4-picture animate__animated animate-on-scroll animate__slow"
                 src="images/row4-2.jpg"
                 alt="getränke"
               />
@@ -136,7 +153,7 @@ function Home() {
               </div>
               <div className="col-4 p-0">
               <img
-                className="row4-picture"
+                className="row4-picture animate__animated animate-on-scroll animate__slow"
                 src="images/row4-2.jpg"
                 alt="getränke"
               />
@@ -151,7 +168,7 @@ function Home() {
               </div>
               <div className="col-4 p-0">
               <img
-                className="row4-picture"
+                className="row4-picture animate__animated animate-on-scroll animate__slow"
                 src="images/row4-3.jpg"
                 alt="getränke"
               />
@@ -165,7 +182,7 @@ function Home() {
             <div className="row">
             <div className="col-4 p-0">
               <img
-                className="row4-picture"
+                className="row4-picture animate__animated animate-on-scroll animate__slow"
                 src="images/row4-4.jpg"
                 alt="getränke"
               />
@@ -177,7 +194,7 @@ function Home() {
               </div>
               <div className="col-4 p-0">
               <img
-                className="row4-picture"
+                className="row4-picture animate__animated animate-on-scroll animate__slow"
                 src="images/row4-5.jpg"
                 alt="getränke"
               />
