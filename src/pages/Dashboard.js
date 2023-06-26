@@ -6,6 +6,7 @@ import { api } from "../services/httpService";
 import userService from "../services/userService";
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
+import Swal from "sweetalert2";
 
 function Dashboard() {
   useEffect(() => {
@@ -71,8 +72,8 @@ function Dashboard() {
     }
   }
 
-  const updatePerson = async (pEvent) => {
-    pEvent.preventDefault();
+  const updatePerson = async (e) => {
+    e.preventDefault();
     const updatedUser = {
       firstName: userFirstName,
       lastName: userLastName,
@@ -127,25 +128,60 @@ function Dashboard() {
     }
   };
 
-  const createEssen = async () => {
-    const essen = {
-      name: name,
-      category: category,
-      price: price,
-    };
+  const getSuccessful = async () => {
     try {
-      const response = await api.post(`/dashboard/essen`, essen);
-      setName("");
-      setCategory("");
-      setPrice(0);
-      return response.data;
+      const response = await Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Your work has been saved",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return response;
     } catch (error) {
       console.error(error);
       throw error;
     }
   };
 
+  const createEssen = async (e) => {
+    e.preventDefault();
+    const selectedCategory = document.querySelector(".form-select");
+    const nameInput = document.querySelector("#createEssenName");
+    const priceInput = document.querySelector("#createEssenPrice");
+    if (
+      selectedCategory.selectedIndex === 0 ||
+      nameInput.value === "" ||
+      priceInput.value === ""
+    ) {
+      Swal.fire({
+        icon: "error",
+        title: "Please check your configuration before creating ",
+        text: "Oooooops...",
+      });
+      return;
+    } else {
+      getSuccessful();
+      const essen = {
+        name: name,
+        category: category,
+        price: price,
+      };
+      try {
+        const response = await api.post(`/dashboard/essen`, essen);
+        setName("");
+        setCategory("");
+        setPrice(0);
+        return response.data;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    }
+  };
+
   const createMonatsHits = async () => {
+    getSuccessful();
     const essen = {
       name: nameMonatsHits,
       content: contentMonatsHits,
@@ -164,9 +200,10 @@ function Dashboard() {
   };
 
   const createMittagsmenu = async (e) => {
+    getSuccessful();
     e.preventDefault();
     const formData = new FormData();
-    formData.append("mittagsmenu", mittagsmenu, "mittagsmenu.pdf"); // Dosya adını belirtin
+    formData.append("mittagsmenu", mittagsmenu, "mittagsmenu.pdf");
 
     try {
       const response = await api.post(`/dashboard/mittagsmenu`, formData, {
@@ -174,6 +211,7 @@ function Dashboard() {
           "Content-Type": "multipart/form-data", // Form verisi olarak gönderileceği için 'multipart/form-data' olarak ayarlayın
         },
       });
+      document.getElementById("mittagsmenu").reset();
       return response.data;
     } catch (error) {
       console.error(error);
@@ -183,6 +221,7 @@ function Dashboard() {
 
   const createSpeisekartenmenu = async (e) => {
     e.preventDefault();
+    getSuccessful();
     const formData = new FormData();
     formData.append(
       "speisekartenmenu",
@@ -195,6 +234,7 @@ function Dashboard() {
           "Content-Type": "multipart/form-data",
         },
       });
+      document.getElementById("speisenkarte").reset();
       return response.data;
     } catch (error) {
       console.error(error);
@@ -252,6 +292,7 @@ function Dashboard() {
 
   const addGalleryImage = async (e) => {
     e.preventDefault();
+    getSuccessful();
     const formData = new FormData();
 
     for (let i = 0; i < galleryImage.length; i++) {
@@ -260,6 +301,7 @@ function Dashboard() {
 
     try {
       const response = await api.post(`/dashboard/galleryImage`, formData);
+      document.getElementById("gallery").reset();
       return response.data;
     } catch (error) {
       console.error(error);
@@ -589,10 +631,11 @@ function Dashboard() {
                     <div className="input-group">
                       <input
                         type="text"
+                        id="createEssenName"
                         placeholder="Name"
+                        value={name}
                         className="form-control p-2"
                         onChange={(e) => setName(e.target.value)}
-                        required
                       />
                     </div>
                   </div>
@@ -602,8 +645,11 @@ function Dashboard() {
                         class="form-select"
                         aria-label="Default select example"
                         onChange={(e) => setCategory(e.target.value)}
+                        required
                       >
-                        <option selected>Catecory</option>
+                        <option disabled selected>
+                          Catecory
+                        </option>
                         <option value="Salate">Salate</option>
                         <option value="Pasta">Pasta</option>
                         <option value="Pizza">Pizza</option>
@@ -617,6 +663,8 @@ function Dashboard() {
                       <input
                         type="number"
                         placeholder="Price"
+                        id="createEssenPrice"
+                        value={price}
                         className="form-control  p-2"
                         onChange={(e) => setPrice(e.target.value)}
                         required
@@ -626,7 +674,7 @@ function Dashboard() {
                   <button
                     type="submit"
                     className="reservation-btn my-3 px-4 col rounded-4"
-                    onClick={(e) => createEssen()}
+                    onClick={(e) => createEssen(e)}
                   >
                     SENDEN
                   </button>
@@ -685,7 +733,10 @@ function Dashboard() {
                 <h1 className="reservation-title text-center mt-5">
                   Mittagsmenü hinzufügen
                 </h1>
-                <form className="me-5 d-flex justify-content-around gap-4">
+                <form
+                  className="me-5 d-flex justify-content-around gap-4"
+                  id="mittagsmenu"
+                >
                   <div className="my-3 mt-4 col-5">
                     <div className="input-group">
                       <input
@@ -714,12 +765,14 @@ function Dashboard() {
                 <h1 className="reservation-title text-center mt-5">
                   Speisekarten Menü hinzufügen
                 </h1>
-                <form className="me-5 d-flex justify-content-around gap-4">
+                <form
+                  className="me-5 d-flex justify-content-around gap-4"
+                  id="speisenkarte"
+                >
                   <div className="my-3 mt-4 col-5">
                     <div className="input-group">
                       <input
                         type="file"
-                        placeholder="pdf seciniz"
                         className="form-control p-2"
                         name="speisekartenmenü"
                         onChange={(e) =>
@@ -743,7 +796,10 @@ function Dashboard() {
                 <h1 className="reservation-title text-center mt-5">
                   Gallery Image hinzufügen
                 </h1>
-                <form className="me-5 d-flex justify-content-around gap-4">
+                <form
+                  className="me-5 d-flex justify-content-around gap-4"
+                  id="gallery"
+                >
                   <div className="my-3 mt-4 col-5">
                     <div className="input-group">
                       <input

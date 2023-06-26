@@ -6,6 +6,7 @@ import { api } from "../services/httpService";
 import { UserContext } from "../contexts/UserContext";
 import { CSSTransition } from "react-transition-group";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function OnlineBestellung() {
   useEffect(() => {
@@ -46,7 +47,23 @@ function OnlineBestellung() {
       throw error;
     }
   };
+  const getSuccessful = async () => {
+    try {
+      const response = await Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Your order has been successfully",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
   const createBestellungen = async (pEmail) => {
+    getSuccessful();
     const newArray = meineBestellung.map((obj) => ({
       ...obj,
       abholen: isChecked.toString(),
