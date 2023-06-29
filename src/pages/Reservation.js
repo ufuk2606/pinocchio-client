@@ -26,8 +26,7 @@ function Reservation() {
     if (
       anzahlPersonen === "" ||
       datum === "" ||
-      time === "" ||
-      mitteilung === ""
+      time === "" 
     ) {
       Swal.fire({
         icon: "error",
