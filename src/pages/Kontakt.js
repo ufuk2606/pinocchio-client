@@ -3,6 +3,7 @@ import PageTop from "../components/PageTop";
 import Footer from "../components/Footer";
 import { UserContext } from "../contexts/UserContext";
 import { api } from "../services/httpService";
+import Swal from "sweetalert2";
 
 function Kontakt() {
   useEffect(() => {
@@ -15,22 +16,49 @@ function Kontakt() {
   const { currentUser } = useContext(UserContext);
   const [mitteilung, setMitteilung] = useState("");
 
+  // const createKontakt = async (pEmail) => {
+  //   const kontaktMail = {
+  //     mitteilung: mitteilung,
+  //   };
+  //   try {
+  //     const response = await api.post(
+  //       `/kontakt/kontakt?email=${pEmail}`,
+  //       kontaktMail
+  //     );
+  //     setMitteilung("");
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error(error);
+  //     throw error;
+  //   }
+  // };
+
   const createKontakt = async (pEmail) => {
-    const kontaktMail = {
-      mitteilung: mitteilung,
-    };
-    try {
-      const response = await api.post(
-        `/kontakt/kontakt?email=${pEmail}`,
-        kontaktMail
-      );
-      setMitteilung("");
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
+    if (mitteilung === "") {
+      Swal.fire({
+        icon: "error",
+        title: "Please check your configuration before creating ",
+        text: "Oooooops...",
+      });
+      return;
+    } else {
+      const kontaktMail = {
+        mitteilung: mitteilung,
+      };
+      try {
+        const response = await api.post(
+          `/kontakt/kontakt?email=${pEmail}`,
+          kontaktMail
+        );
+        setMitteilung("");
+        return response.data;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
     }
   };
+  
 
   return (
     <>

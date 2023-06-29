@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import ReservationTabelle from "../components/ReservationTabelle";
 import { UserContext } from "../contexts/UserContext";
 import { api } from "../services/httpService";
+import Swal from "sweetalert2";
 
 function Reservation() {
   useEffect(() => {
@@ -20,30 +21,44 @@ function Reservation() {
   const [time, setTime] = useState("");
   const [mitteilung, setMitteilung] = useState("");
   
-  
+
   const createRezervation = async (pEmail) => {
-    const rezervation = {
-      anzahlPersonen: anzahlPersonen,
-      datum: datum,
-      uhrZeit: time,
-      mitteilung:mitteilung,
-    }
-    try {
-      const response = await api.post(
-        `/rezervation/rezervation?email=${pEmail}`,
-        rezervation
-      );
-      setAnzahlPersonen("");
-      setDatum("");
-      setTime("");
-      setMitteilung("");
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
+    if (
+      anzahlPersonen === "" ||
+      datum === "" ||
+      time === "" ||
+      mitteilung === ""
+    ) {
+      Swal.fire({
+        icon: "error",
+        title: "Please check your configuration before creating ",
+        text: "Oooooops...",
+      });
+      return;
+    } else {
+      const rezervation = {
+        anzahlPersonen: anzahlPersonen,
+        datum: datum,
+        uhrZeit: time,
+        mitteilung: mitteilung,
+      };
+      try {
+        const response = await api.post(
+          `/rezervation/rezervation?email=${pEmail}`,
+          rezervation
+        );
+        setAnzahlPersonen("");
+        setDatum("");
+        setTime("");
+        setMitteilung("");
+        return response.data;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
     }
   };
-
+  
 
   return (
     <>
@@ -62,7 +77,6 @@ function Reservation() {
                     placeholder="Anzahl Personen*"
                     className="form-control p-2"
                     onChange={(e) => setAnzahlPersonen(e.target.value)}
-                    required
                   />
                 </div>
               </div>
@@ -73,7 +87,6 @@ function Reservation() {
                     placeholder="Datum*"
                     className="form-control  p-2"
                     onChange={(e) => setDatum(e.target.value.toString())}
-                    required
                   />
                 </div>
               </div>
@@ -84,7 +97,6 @@ function Reservation() {
                     placeholder="Zeit*"
                     className="form-control  p-2"
                     onChange={(e) => setTime(e.target.value.toString())}
-                    required
                   />
                 </div>
               </div>
